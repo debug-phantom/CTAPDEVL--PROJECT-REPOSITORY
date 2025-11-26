@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Lunar Veil Cafe ☕ — Login / Register</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --color-dark: #0A0A1F;
+      --color-primary: #8A2BE2;
+      --color-secondary: #FFD700;
+      --color-accent: #2c254b;
+      --color-light: #E0E0E0;
+      --font-heading: 'Cinzel', serif;
+      --font-body: 'Inter', sans-serif;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;min-height:100vh;font-family:var(--font-body);background-color:var(--color-dark);color:var(--color-light);
+      background-image: radial-gradient(#2c254b 1px, transparent 0), radial-gradient(#2c254b 1px, transparent 0);
+      background-size:80px 80px;background-position:0 0,40px 40px;
+    }
+    .view-title {
+        font-family: var(--font-heading);
+        color: var(--color-secondary);
+        font-size: 2.5rem;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+    .card {
+        background-color: var(--color-accent);
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+        margin-bottom: 20px;
+    }
+    .nav-button{background:var(--color-primary);color:white;border:none;padding:10px 14px;border-radius:8px;cursor:pointer;font-weight:600;box-shadow:0 3px 10px rgba(138,43,226,.4)}
+
+    /* === LOGIN/REGISTER STYLES (Page-specific) === */
+    .auth-page {
+        display: flex; 
+        justify-content: center; 
+        align-items: center; 
+        min-height: 100vh;
+        flex-direction: column;
+        padding: 20px;
+    }
+    .auth-container { width: 100%; max-width: 400px; }
+    .form-group { margin-bottom: 15px; }
+    .form-group label { display: block; margin-bottom: 5px; font-weight: 600; }
+    .auth-container input[type="email"],
+    .auth-container input[type="text"],
+    .auth-container input[type="password"] {
+        width: 100%; padding: 10px; border: 1px solid #444; border-radius: 6px;
+        background-color: var(--color-dark); color: var(--color-light);
+    }
+    .auth-container button { width: 100%; }
+    .toggle-link { text-align: center; margin-top: 15px; cursor: pointer; color: var(--color-secondary); text-decoration: underline; }
+    
+    /* View Switching (Only show one form at a time) */
+    #registerView { display: none; } 
+  </style>
+</head>
+
+<body>
+
+<div class="auth-page">
+
+    <div id="loginView" class="auth-container card">
+        <h2 class="view-title">Login to Lunar Veil Cafe ☕</h2>
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="loginEmail">Email:</label>
+                <input type="email" id="loginEmail" required>
+            </div>
+            <div class="form-group">
+                <label for="loginPassword">Password:</label>
+                <input type="password" id="loginPassword" required>
+            </div>
+            <button type="submit" class="nav-button">Login</button>
+            <p id="loginMessage" style="text-align: center; margin-top: 10px; color: var(--color-secondary);"></p>
+        </form>
+        <p class="toggle-link" onclick="showRegister()">Need an account? Register here.</p>
+    </div>
+
+    <div id="registerView" class="auth-container card">
+        <h2 class="view-title">Register</h2>
+        <form id="registerForm">
+            <div class="form-group">
+                <label for="registerUsername">Username:</label>
+                <input type="text" id="registerUsername" required>
+            </div>
+            <div class="form-group">
+                <label for="registerEmail">Email:</label>
+                <input type="email" id="registerEmail" required>
+            </div>
+            <div class="form-group">
+                <label for="registerPassword">Password (min 6 chars):</label>
+                <input type="password" id="registerPassword" required>
+            </div>
+            <button type="submit" class="nav-button">Register</button>
+            <p id="registerMessage" style="text-align: center; margin-top: 10px; color: var(--color-secondary);"></p>
+        </form>
+        <p class="toggle-link" onclick="showLogin()">Already have an account? Login here.</p>
+    </div>
+
+</div>
+
+
+<script>
+    // View Elements
+    const loginView = document.getElementById('loginView');
+    const registerView = document.getElementById('registerView');
+    const loginForm = document.getElementById('loginForm');
+    const registerForm = document.getElementById('registerForm');
+    const loginMessage = document.getElementById('loginMessage');
+    const registerMessage = document.getElementById('registerMessage');
+
+    // --- VIEW MANAGEMENT ---
+    window.showRegister = function() {
+        loginView.style.display = 'none';
+        registerView.style.display = 'block';
+        registerMessage.textContent = '';
+    }
+
+    window.showLogin = function() {
+        loginView.style.display = 'block';
+        registerView.style.display = 'none';
+        loginMessage.textContent = '';
+    }
+
+    // --- LOGIN ---
+    loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = document.getElementById('loginEmail').value;
+        const password = document.getElementById('loginPassword').value;
+        
+        loginMessage.textContent = 'Logging in...';
+
+        try {
+            const response = await fetch('auth.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'login', email, password })
+            });
+            const data = await response.json();
+
+            if (data.success) {
+                // Successful login -> Redirect to the main app
+                window.location.href = 'index.html'; 
+            } else {
+                loginMessage.textContent = `Login Failed: ${data.message}`;
+            }
+        } catch (error) {
+            loginMessage.textContent = 'Connection error. Could not reach server.';
+        }
+    });
+
+    // --- REGISTER ---
+    registerForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const username = document.getElementById('registerUsername').value;
+        const email = document.getElementById('registerEmail').value;
+        const password = document.getElementById('registerPassword').value;
+
+        registerMessage.textContent = 'Registering...';
+
+        try {
+            const response = await fetch('auth.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'register', username, email, password })
+            });
+            const data = await response.json();
+
+            if (data.success) {
+                // Successful registration -> Redirect to the main app
+                window.location.href = 'index.html'; 
+            } else {
+                registerMessage.textContent = `Registration Failed: ${data.message}`;
+            }
+        } catch (error) {
+            registerMessage.textContent = 'Connection error. Could not reach server.';
+        }
+    });
+
+    // --- Check Status on Load (Prevent logged-in users from seeing the login page) ---
+    async function checkLoginStatus() {
+        try {
+            const response = await fetch('auth.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'status' })
+            });
+            const data = await response.json();
+            
+            if (data.isLoggedIn) {
+                // User is logged in, redirect them to the secure app
+                window.location.href = 'index.html'; 
+            }
+        } catch (error) {
+            console.error('Error checking login status:', error);
+            // On error, remain on login page.
+        }
+    }
+
+    checkLoginStatus();
+</script>
+
+</body>
+</html>

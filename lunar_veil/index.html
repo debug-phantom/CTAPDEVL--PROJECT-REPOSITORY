@@ -1,0 +1,725 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Lunar Veil Cafe ☕ — Main App</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+  <style>
+    /* ------------------------------------- */
+    /* I. Global & Header Styles */
+    /* ------------------------------------- */
+    :root{
+      --color-dark: #0A0A1F;
+      --color-primary: #8A2BE2;
+      --color-secondary: #FFD700;
+      --color-accent: #2c254b;
+      --color-light: #E0E0E0;
+      --font-heading: 'Cinzel', serif;
+      --font-body: 'Inter', sans-serif;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;min-height:100vh;font-family:var(--font-body);background-color:var(--color-dark);color:var(--color-light);
+      background-image: radial-gradient(#2c254b 1px, transparent 0), radial-gradient(#2c254b 1px, transparent 0);
+      background-size:80px 80px;background-position:0 0,40px 40px;
+    }
+    header{background-color:var(--color-accent);padding:1rem 5%;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100;box-shadow:0 4px 15px rgba(0,0,0,.6)}
+    .logo{font-family:var(--font-heading);color:var(--color-secondary);font-size:1.8rem;letter-spacing:2px;text-shadow:0 0 5px var(--color-secondary)}
+    .nav-button{background:var(--color-primary);color:white;border:none;padding:10px 14px;border-radius:8px;cursor:pointer;font-weight:600;box-shadow:0 3px 10px rgba(138,43,226,.4)}
+    .nav-button.small{padding:6px 10px;font-size:.9rem}
+    .nav-button.ghost{background:transparent;border:1px solid rgba(255,255,255,.08);box-shadow:none}
+    .welcome-block{color:#a0f0f0;font-weight:600;margin-right:6px}
+
+    /* ------------------------------------- */
+    /* II. View Control & Layout */
+    /* ------------------------------------- */
+    .app-view {
+        padding: 30px 5%;
+        display: none; /* Hides all views initially */
+        min-height: calc(100vh - 80px); 
+    }
+    .app-view.active { display: block; }
+
+    .view-title {
+        font-family: var(--font-heading);
+        color: var(--color-secondary);
+        font-size: 2.5rem;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+    .card {
+        background-color: var(--color-accent);
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+        margin-bottom: 20px;
+    }
+    
+    /* ------------------------------------- */
+    /* III. Menu & Cart Styles */
+    /* ------------------------------------- */
+    #menu-container {
+        display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 20px;
+    }
+    .product-item { border-bottom: 3px solid var(--color-primary); transition: transform 0.2s; text-align: center; }
+    .product-item p.price { font-weight: 700; color: var(--color-secondary); font-size: 1.5rem; margin-top: 5px; margin-bottom: 10px; }
+    #cartView { max-width: 800px; margin: 0 auto; }
+    .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px dashed #444; }
+    .cart-total { margin-top: 20px; padding-top: 20px; border-top: 2px solid var(--color-secondary); font-size: 1.5rem; font-weight: 700; display: flex; justify-content: space-between; }
+    .order-type-selection { margin-bottom: 20px; padding: 15px; border: 1px solid var(--color-primary); border-radius: 8px; background-color: #1f1b30; }
+    #deliveryAddressGroup input { width: 100%; padding: 8px; border: 1px solid #444; background-color: var(--color-dark); color: var(--color-light); margin-top: 5px; border-radius: 4px; }
+    
+    /* ------------------------------------- */
+    /* IV. Wallet Styles */
+    /* ------------------------------------- */
+    #walletView { max-width: 600px; margin: 0 auto; }
+    .balance-display { text-align: center; padding: 30px; background: linear-gradient(135deg, #1f1b30, var(--color-accent)); border: 1px solid var(--color-primary); }
+    .balance-amount { font-family: var(--font-heading); font-size: 3rem; color: var(--color-secondary); text-shadow: 0 0 8px var(--color-primary); }
+
+    /* ------------------------------------- */
+    /* V. Slideshow Styles (New addition) */
+    /* ------------------------------------- */
+    #slideshow-container {
+        position: relative;
+        max-width: 100%;
+        margin: 20px auto;
+        overflow: hidden;
+        border-radius: 12px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+    }
+    .slide {
+        display: none;
+        padding: 40px;
+        text-align: center;
+        color: white;
+        transition: background-color 0.5s;
+        min-height: 250px;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+    .slide.active {
+        display: flex;
+    }
+    .slide h2 { 
+        font-family: var(--font-heading); 
+        color: var(--color-secondary); 
+        font-size: 2em; 
+        margin-bottom: 10px;
+    }
+    .slide p {
+        max-width: 70%;
+        margin: 0 auto 20px;
+    }
+    .slide .nav-button {
+        background: white;
+        color: var(--color-dark);
+    }
+    .slide-nav {
+        position: absolute;
+        top: 50%;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        transform: translateY(-50%);
+        padding: 0 10px;
+        z-index: 10;
+    }
+    .slide-nav button {
+        background: rgba(0, 0, 0, 0.5);
+        border: none;
+        color: white;
+        padding: 10px;
+        cursor: pointer;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        line-height: 1;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <div style="display:flex;align-items:center;gap:18px">
+    <h1 class="logo">Lunar Veil Cafe ☕</h1>
+  </div>
+
+  <div id="navControls" style="display:flex;align-items:center;gap:10px">
+    <span id="welcomeUser" class="welcome-block" style="display:none;"></span>
+    <button id="homeButton" class="nav-button small" style="display:none;">Home</button>
+    <button id="menuButton" class="nav-button small" style="display:none;">Menu</button>
+    <button id="walletButton" class="nav-button small" style="display:none;">Wallet</button>
+    <button id="viewCartButton" class="nav-button small" style="display:none;">Cart</button>
+    <button id="logoutButton" class="nav-button ghost small" style="display:none;">Logout</button>
+  </div>
+</header>
+
+
+<div id="homeView" class="app-view">
+    <h2 class="view-title">Welcome to Lunar Veil Cafe ☕</h2>
+    <p style="text-align: center; color: #a0f0f0;">Your celestial journey into coffee begins here.</p>
+    
+    <div id="slideshow-container">
+        <div id="slideshow">
+            </div>
+        <div class="slide-nav">
+            <button id="prevSlide">&#10094;</button>
+            <button id="nextSlide">&#10095;</button>
+        </div>
+    </div>
+</div>
+
+
+<div id="menuView" class="app-view">
+    <h2 class="view-title">Our Celestial Menu</h2>
+    <div id="menu-container">
+        <p style="text-align: center;">Loading menu items...</p>
+    </div>
+</div>
+
+
+<div id="walletView" class="app-view">
+    <h2 class="view-title">Your Lunar Wallet</h2>
+
+    <div class="card balance-display">
+        <h3>Current Balance</h3>
+        <p id="walletBalance" class="balance-amount">$0.00</p>
+    </div>
+
+    <div class="card">
+        <h3>Add Funds</h3>
+        <form id="addFundsForm">
+            <div class="form-group">
+                <label for="addAmount">Amount to Add ($):</label>
+                <input type="number" id="addAmount" name="amount" min="1" step="0.01" required>
+            </div>
+            <button type="submit" class="nav-button">Top Up Wallet</button>
+        </form>
+        <p id="walletMessage" style="margin-top: 15px; color: var(--color-secondary);"></p>
+    </div>
+</div>
+
+
+<div id="cartView" class="app-view">
+    <h2 class="view-title">Your Cart</h2>
+    <div id="cartItemsContainer">
+        </div>
+
+    <div class="order-type-selection">
+        <h4>Choose Order Type:</h4>
+        <label>
+            <input type="radio" name="orderType" value="Pickup" id="pickupRadio" checked> Pickup
+        </label>
+        <label>
+            <input type="radio" name="orderType" value="Delivery" id="deliveryRadio"> Delivery
+        </label>
+
+        <div id="deliveryAddressGroup" style="display: none;">
+            <label for="deliveryAddress">Delivery Address:</label>
+            <input type="text" id="deliveryAddress" placeholder="Enter your full address" required>
+        </div>
+    </div>
+
+    <div id="cartSummary">
+        <div class="cart-total">
+            <span>Total:</span>
+            <span id="cartTotalDisplay">$0.00</span>
+        </div>
+        <button id="checkoutButton" class="nav-button" style="width: 100%; margin-top: 20px;">
+            Checkout & Pay (Using Wallet)
+        </button>
+        <p id="checkoutMessage" style="text-align: center; margin-top: 15px; color: var(--color-secondary);"></p>
+    </div>
+</div>
+
+
+<script>
+    // =========================================================================
+    // I. View Management & Navigation
+    // =========================================================================
+    const views = document.querySelectorAll('.app-view');
+    const homeView = document.getElementById('homeView');
+    const menuView = document.getElementById('menuView');
+    const walletView = document.getElementById('walletView');
+    const cartView = document.getElementById('cartView');
+
+    const homeButton = document.getElementById('homeButton');
+    const menuButton = document.getElementById('menuButton');
+    const walletButton = document.getElementById('walletButton');
+    const viewCartButton = document.getElementById('viewCartButton'); 
+    
+    // Auth elements
+    const welcomeUser = document.getElementById('welcomeUser');
+    const logoutButton = document.getElementById('logoutButton');
+
+
+    function showView(targetView) {
+        views.forEach(view => view.style.display = 'none');
+        targetView.style.display = 'block';
+
+        // Load content specific to the view
+        if (targetView === walletView) {
+            getWalletBalance();
+        }
+        if (targetView === menuView) {
+            loadMenu();
+        }
+        if (targetView === cartView) {
+            renderCart();
+        }
+    }
+
+    homeButton.addEventListener('click', () => showView(homeView));
+    menuButton.addEventListener('click', () => showView(menuView));
+    walletButton.addEventListener('click', () => showView(walletView));
+    viewCartButton.addEventListener('click', () => showView(cartView));
+    
+    // --- AUTH CONTROLS & STATUS ---
+    function handleAuthControls(isLoggedIn, username = null) {
+        const navElements = [welcomeUser, homeButton, menuButton, walletButton, viewCartButton, logoutButton];
+
+        if (isLoggedIn) {
+            welcomeUser.textContent = `Welcome, ${username}!`;
+            navElements.forEach(el => el.style.display = 'inline-block');
+        } else {
+            navElements.forEach(el => el.style.display = 'none');
+        }
+    }
+
+    async function checkLoginStatus() {
+        try {
+            const response = await fetch('auth.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'status' })
+            });
+            const data = await response.json();
+            
+            if (data.isLoggedIn) {
+                handleAuthControls(true, data.username);
+                showView(homeView); // Show the homepage on successful load
+            } else {
+                // User is NOT logged in, redirect them to the login page
+                window.location.href = 'login.html'; 
+            }
+        } catch (error) {
+            console.error('Error checking login status or connecting to auth.php:', error);
+            alert('Security check failed. Redirecting to login.');
+            window.location.href = 'login.html'; 
+        }
+    }
+
+
+    // --- LOGOUT ---
+    async function handleLogout() {
+        if (!confirm('Are you sure you want to log out?')) {
+            return;
+        }
+        try {
+            const response = await fetch('auth.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'logout' })
+            });
+            const data = await response.json();
+
+            if (data.success) {
+                alert('You have successfully logged out.');
+                // Successful logout -> Redirect to login page
+                window.location.href = 'login.html';
+            } else {
+                alert(`Logout failed: ${data.message}`);
+            }
+        } catch (error) {
+            console.error('Logout failed due to connection error:', error);
+            alert('Logout failed due to a connection error.');
+        }
+    }
+
+    logoutButton.addEventListener('click', handleLogout);
+
+    // Default: Run security check on load
+    checkLoginStatus();
+
+    // =========================================================================
+    // II. Slideshow Functionality (FOR HOME VIEW)
+    // =========================================================================
+    const slideshowContainer = document.getElementById('slideshow');
+    const prevSlideButton = document.getElementById('prevSlide');
+    const nextSlideButton = document.getElementById('nextSlide');
+    let currentSlideIndex = 0;
+    let slideshowInterval;
+    const slidesData = [
+        { 
+            title: "Starlight Latte Special ✨", 
+            text: "Our velvety smooth latte with a hint of vanilla and cinnamon—perfect for star-gazers. Only $5.75!", 
+            color: "#6A5ACD", // Slate Blue
+            cta: "Menu" 
+        },
+        { 
+            title: "Try the Nebula Blue Drink 🍹", 
+            text: "A sparkling blueberry beverage that changes color! Available for a limited time.", 
+            color: "#4682B4", // Steel Blue
+            cta: "Menu" 
+        },
+        { 
+            title: "Top Up Your Lunar Wallet 💳", 
+            text: "Load funds easily to pay for orders instantly and seamlessly. Click Wallet to begin!", 
+            color: "#8A2BE2", // Primary Violet
+            cta: "Wallet" 
+        },
+        { 
+            title: "Midnight Espresso Deal ☕", 
+            text: "Get your caffeine fix with our dark roast, velvet-finish espresso for only $4.50.", 
+            color: "#1E90FF", // Dodger Blue
+            cta: "Menu" 
+        }
+    ];
+
+    function renderSlides() {
+        slideshowContainer.innerHTML = ''; // Clear previous slides
+        slidesData.forEach((data, index) => {
+            const slide = document.createElement('div');
+            slide.className = 'slide';
+            if (index === currentSlideIndex) {
+                slide.classList.add('active');
+            }
+            slide.style.backgroundColor = data.color;
+            slide.innerHTML = `
+                <h2>${data.title}</h2>
+                <p>${data.text}</p>
+                <button class="nav-button" data-view="${data.cta.toLowerCase()}">${data.cta} View</button>
+            `;
+            slideshowContainer.appendChild(slide);
+
+            // Add listener to the new button
+            slide.querySelector('.nav-button').addEventListener('click', (e) => {
+                const viewName = e.target.getAttribute('data-view');
+                if (viewName === 'menu') showView(menuView);
+                if (viewName === 'wallet') showView(walletView);
+            });
+        });
+    }
+
+    function showSlide(index) {
+        const slides = slideshowContainer.querySelectorAll('.slide');
+        if (slides.length === 0) return;
+
+        if (index >= slides.length) {
+            currentSlideIndex = 0;
+        } else if (index < 0) {
+            currentSlideIndex = slides.length - 1;
+        } else {
+            currentSlideIndex = index;
+        }
+        
+        slides.forEach((slide, i) => {
+            slide.classList.remove('active');
+            if (i === currentSlideIndex) {
+                slide.classList.add('active');
+            }
+        });
+    }
+
+    function nextSlide() {
+        showSlide(currentSlideIndex + 1);
+    }
+    
+    function startSlideshow() {
+        renderSlides();
+        if (slideshowInterval) clearInterval(slideshowInterval);
+        slideshowInterval = setInterval(nextSlide, 5000); 
+    }
+    
+    // Attach event listeners and start slideshow
+    if (slideshowContainer) {
+        prevSlideButton.addEventListener('click', () => {
+            clearInterval(slideshowInterval);
+            showSlide(currentSlideIndex - 1);
+            startSlideshow(); 
+        });
+        nextSlideButton.addEventListener('click', () => {
+            clearInterval(slideshowInterval);
+            nextSlide();
+            startSlideshow(); 
+        });
+        // Start the slideshow when the script loads (it will be visible once auth check passes)
+        startSlideshow(); 
+    }
+
+
+    // =========================================================================
+    // III. Cart Functionality
+    // =========================================================================
+    const cartItemsContainer = document.getElementById('cartItemsContainer');
+    const cartTotalDisplay = document.getElementById('cartTotalDisplay');
+    const checkoutButton = document.getElementById('checkoutButton');
+    const checkoutMessage = document.getElementById('checkoutMessage');
+    let menuProducts = []; 
+    
+    const deliveryRadio = document.getElementById('deliveryRadio');
+    const pickupRadio = document.getElementById('pickupRadio');
+    const deliveryAddressGroup = document.getElementById('deliveryAddressGroup');
+    const deliveryAddressInput = document.getElementById('deliveryAddress');
+
+    function toggleDeliveryAddress() {
+        if (deliveryRadio.checked) {
+            deliveryAddressGroup.style.display = 'block';
+            deliveryAddressInput.setAttribute('required', 'required');
+        } else {
+            deliveryAddressGroup.style.display = 'none';
+            deliveryAddressInput.removeAttribute('required');
+            deliveryAddressInput.value = ''; 
+        }
+    }
+
+    deliveryRadio.addEventListener('change', toggleDeliveryAddress);
+    pickupRadio.addEventListener('change', toggleDeliveryAddress);
+    
+    function renderCart() {
+        const cart = getCart();
+        cartItemsContainer.innerHTML = '';
+        let total = 0;
+
+        if (cart.length === 0) {
+            cartItemsContainer.innerHTML = '<p style="text-align: center;">Your cart is empty and ready for stellar treats.</p>';
+            cartTotalDisplay.textContent = '$0.00';
+            checkoutButton.disabled = true;
+            return;
+        }
+
+        cart.forEach(item => {
+            const itemTotal = item.price * item.quantity;
+            total += itemTotal;
+            
+            const itemDiv = document.createElement('div');
+            itemDiv.className = 'cart-item card';
+            itemDiv.innerHTML = `
+                <div>
+                    <strong>${item.name}</strong> 
+                    <p style="font-size: 0.9em; margin: 2px 0;">$${item.price.toFixed(2)} x ${item.quantity}</p>
+                </div>
+                <div style="text-align: right;">
+                    <strong>$${itemTotal.toFixed(2)}</strong>
+                    <div style="display: flex; gap: 8px; margin-top: 5px;">
+                        <button class="nav-button small" onclick="updateCartItem(${item.id}, 1)">+</button>
+                        <button class="nav-button small" onclick="updateCartItem(${item.id}, -1)">-</button>
+                    </div>
+                </div>
+            `;
+            cartItemsContainer.appendChild(itemDiv);
+        });
+
+        cartTotalDisplay.textContent = `$${total.toFixed(2)}`;
+        checkoutButton.disabled = false;
+        checkoutMessage.textContent = '';
+        
+        toggleDeliveryAddress(); 
+    }
+
+    function getCart() {
+        const cartString = localStorage.getItem('lunarVeilCart');
+        return cartString ? JSON.parse(cartString) : [];
+    }
+
+    function saveCart(cart) {
+        localStorage.setItem('lunarVeilCart', JSON.stringify(cart));
+    }
+
+    function addToCart(product) {
+        let cart = getCart();
+        const existingItem = cart.find(item => item.id === product.id);
+
+        if (existingItem) {
+            existingItem.quantity += 1;
+        } else {
+            cart.push({
+                id: product.id,
+                name: product.name,
+                price: parseFloat(product.price),
+                quantity: 1
+            });
+        }
+        
+        saveCart(cart);
+        alert(`${product.name} added to cart!`);
+    }
+
+    window.updateCartItem = function(id, change) { 
+        let cart = getCart();
+        const index = cart.findIndex(item => item.id == id); 
+
+        if (index > -1) {
+            cart[index].quantity += change;
+            
+            if (cart[index].quantity <= 0) {
+                cart.splice(index, 1);
+            }
+            saveCart(cart);
+            renderCart(); 
+        }
+    }
+
+    checkoutButton.addEventListener('click', async () => {
+        const cart = getCart();
+        if (cart.length === 0) {
+            checkoutMessage.textContent = 'Cart is empty.';
+            return;
+        }
+
+        const orderType = document.querySelector('input[name="orderType"]:checked').value;
+        let deliveryAddress = '';
+
+        if (orderType === 'Delivery') {
+            deliveryAddress = deliveryAddressInput.value.trim();
+            if (deliveryAddress === '') {
+                checkoutMessage.textContent = 'Please enter a delivery address.';
+                return;
+            }
+        }
+
+        const orderDetails = {
+            action: 'place_order',
+            cart_items: cart,
+            order_type: orderType, 
+            delivery_address: deliveryAddress 
+        };
+
+        checkoutMessage.textContent = 'Processing checkout...';
+        checkoutButton.disabled = true;
+
+        try {
+            const response = await fetch('menu_logic.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(orderDetails)
+            });
+            const data = await response.json();
+
+            if (data.success) {
+                const message = `Order placed successfully! (${orderType}). New balance: $${parseFloat(data.newBalance).toFixed(2)}`;
+                checkoutMessage.textContent = message;
+                saveCart([]); 
+                renderCart(); 
+            } else {
+                checkoutMessage.textContent = `Checkout Failed: ${data.message}`;
+            }
+        } catch (error) {
+            console.error('Checkout error:', error);
+            checkoutMessage.textContent = 'Connection error. Could not complete order.';
+        } finally {
+            checkoutButton.disabled = false;
+        }
+    });
+
+    // =========================================================================
+    // IV. Wallet Functionality
+    // =========================================================================
+    const walletBalanceElement = document.getElementById('walletBalance');
+    const addFundsForm = document.getElementById('addFundsForm');
+    const walletMessage = document.getElementById('walletMessage');
+
+    async function getWalletBalance() {
+        try {
+            const response = await fetch('wallet.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'get_balance' })
+            });
+            const data = await response.json();
+
+            if (data.success) {
+                const balance = parseFloat(data.balance).toFixed(2);
+                walletBalanceElement.textContent = `$${balance}`;
+            } else {
+                walletBalanceElement.textContent = `Error: ${data.message || 'Login Required'}`;
+            }
+        } catch (error) {
+            console.error('Error fetching balance:', error);
+            walletBalanceElement.textContent = '$?';
+        }
+    }
+
+    addFundsForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const amount = document.getElementById('addAmount').value;
+        walletMessage.textContent = 'Processing...';
+
+        try {
+            const response = await fetch('wallet.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'add_funds', amount: amount })
+            });
+            const data = await response.json();
+
+            if (data.success) {
+                walletMessage.textContent = `Successfully added $${parseFloat(data.added).toFixed(2)}.`;
+                document.getElementById('addAmount').value = ''; 
+                getWalletBalance(); 
+            } else {
+                walletMessage.textContent = `Error: ${data.message}`;
+            }
+        } catch (error) {
+            console.error('Error adding funds:', error);
+            walletMessage.textContent = 'Connection error. Could not add funds.';
+        }
+    });
+
+    // =========================================================================
+    // V. Menu Functionality
+    // =========================================================================
+    const menuContainer = document.getElementById('menu-container');
+
+    async function loadMenu() {
+        menuContainer.innerHTML = '<p style="text-align: center;">Loading menu items...</p>';
+        
+        try {
+            // Note: You must ensure you have a get_menu.php file that returns the product data
+            const response = await fetch('get_menu.php'); 
+            const data = await response.json();
+
+            if (data.success && data.menu.length > 0) {
+                menuProducts = data.menu; 
+                menuContainer.innerHTML = ''; 
+                
+                data.menu.forEach(product => {
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = 'card product-item';
+                    itemDiv.innerHTML = `
+                        <h3>${product.name}</h3>
+                        <p>${product.description}</p>
+                        <p class="price">$${product.price}</p>
+                        <button class="nav-button small add-to-cart-btn" data-id="${product.id}">Add to Cart</button>
+                    `;
+                    menuContainer.appendChild(itemDiv);
+                });
+                
+                document.querySelectorAll('.add-to-cart-btn').forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        const productId = e.target.getAttribute('data-id');
+                        const product = menuProducts.find(p => p.id == productId);
+                        if (product) {
+                            addToCart(product);
+                        }
+                    });
+                });
+
+            } else {
+                 menuContainer.innerHTML = '<p style="text-align: center;">No menu items found.</p>';
+            }
+        } catch (error) {
+            console.error('Error loading menu:', error);
+            menuContainer.innerHTML = '<p style="text-align: center; color: red;">Failed to load menu. Check your server and get_menu.php.</p>';
+        }
+    }
+</script>
+
+
+</body>
+</html>
