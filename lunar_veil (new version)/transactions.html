@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wallet & Transactions | Lunar Veil Cafe</title>
+    
+    <style>
+        /* Basic styles matching the aesthetic from your screenshots */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1a0f30; /* Dark purple/space background */
+            color: #d1c4e9; /* Light purple/white text */
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+        /* Style for the Navigation Bar */
+        header {
+            background-color: #2b1d4c;
+            padding: 10px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        header nav a {
+            color: #ffeb3b; /* Yellow/Gold text for links */
+            text-decoration: none;
+            padding: 0 15px;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+        header nav a:hover {
+            color: #fff;
+        }
+        .logo {
+            color: #ffeb3b;
+            font-size: 1.5em;
+            margin-left: 20px;
+            font-weight: bold;
+        }
+        .logo-icon {
+            font-size: 1.2em; 
+            margin-right: 5px;
+        }
+        .user-info {
+            margin-right: 20px;
+            display: flex;
+            align-items: center;
+        }
+        .user-info button {
+            background: none;
+            border: 1px solid #ffeb3b;
+            color: #ffeb3b;
+            padding: 5px 10px;
+            cursor: pointer;
+            margin-left: 10px;
+            border-radius: 4px;
+        }
+        
+        /* Wallet specific styles */
+        .container {
+            width: 80%;
+            margin: 50px auto;
+            max-width: 1000px;
+        }
+        .main-title {
+            color: #ffeb3b;
+            margin-bottom: 30px;
+        }
+        .wallet-card {
+            background-color: #2b1d4c;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            margin-bottom: 40px;
+        }
+        .current-balance-label {
+            font-size: 1.2em;
+            color: #d1c4e9;
+            margin-bottom: 10px;
+        }
+        /* FIX TARGET: This ID is used by JS to update the balance */
+        #current-wallet-balance {
+            display: block;
+            font-size: 3em;
+            color: #00e676; /* Green for positive balance */
+            margin-bottom: 20px;
+        }
+        #add-funds-message {
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            display: none;
+        }
+        #add-funds-input {
+            padding: 10px;
+            border: 1px solid #3c2a63;
+            background-color: #1a0f30;
+            color: #d1c4e9;
+            margin-right: 10px;
+            width: 80px;
+            text-align: center;
+        }
+        #add-funds-button {
+            background-color: #7b1fa2;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .sub-title {
+            color: #d1c4e9;
+            margin-top: 40px;
+            text-align: left;
+        }
+        .history-table table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #2b1d4c;
+            border-radius: 8px;
+            overflow: hidden;
+            text-align: left;
+            margin-top: 20px;
+        }
+        .history-table th, .history-table td {
+            padding: 15px;
+            border-bottom: 1px solid #3c2a63;
+        }
+        .history-table th {
+            background-color: #3c2a63;
+            color: #ffeb3b;
+        }
+        .credit { color: #00e676; } /* Green for Credits */
+        .debit { color: #ff6e40; } /* Red/Orange for Debits */
+        .error-message {
+            color: #ff6e40;
+            padding: 20px;
+            background-color: #3c2a63;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo"><span class="logo-icon">☕</span>LUNAR VEIL CAFE</div>
+        <nav>
+            <a href="index.html">Home</a> 
+            <a href="menu.html">Menu</a>
+            <a href="wallet.html">Wallet</a>
+            <a href="tracking.html">Tracking</a>
+            <a href="cart.html">Cart (0)</a>
+        </nav>
+        <div class="user-info">
+            <span>Welcome, James Adrian! Balance: $<span id="header-balance">0.00</span></span>
+            <button onclick="logout()">Logout</button>
+        </div>
+    </header>
+
+    <main class="container">
+        <h1 class="main-title">WALLET & TRANSACTIONS</h1>
+
+        <section class="wallet-card">
+            <div class="current-balance-label">Current Balance</div>
+            <strong id="current-wallet-balance">$0.00</strong> 
+            
+            <div id="add-funds-message" style="display: none;"></div>
+
+            <div class="add-funds-controls">
+                <input type="number" id="add-funds-input" value="25" min="1">
+                <button id="add-funds-button" onclick="addFunds()">Add Funds</button>
+            </div>
+        </section>
+
+        <h2 class="sub-title">TRANSACTION HISTORY (LAST 15)</h2>
+
+        <section id="history-container" class="history-table">
+            <p>Loading transaction history...</p>
+        </section>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            loadWalletData();
+        });
+
+        function loadWalletData() {
+            // Load both balance and history simultaneously
+            loadBalance();
+            loadHistory();
+            // Assuming loadUserBalance() updates the header balance
+            // loadUserBalance(); 
+        }
+
+        function loadBalance() {
+            fetch('wallet.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'get_balance' })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // FIX: Ensure this ID matches the <strong> element ID
+                    document.getElementById('current-wallet-balance').innerText = `$${data.balance}`;
+                    // Optional: Update header balance if it exists
+                    const headerBalance = document.getElementById('header-balance');
+                    if (headerBalance) headerBalance.innerText = data.balance;
+                } else {
+                    document.getElementById('current-wallet-balance').innerText = '$0.00';
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching balance:', error);
+            });
+        }
+
+        function loadHistory() {
+            const historyContainer = document.getElementById('history-container');
+            historyContainer.innerHTML = '<p>Loading transaction history...</p>';
+
+            fetch('wallet.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'get_wallet_history' })
+            })
+            .then(response => {
+                if (!response.ok) {
+                     throw new Error('Network error.');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success && data.wallet_transactions.length > 0) {
+                    let html = '<table><thead><tr><th>Date</th><th>Type</th><th>Description</th><th>Amount</th></tr></thead><tbody>';
+                    
+                    data.wallet_transactions.forEach(tx => {
+                        const date = new Date(tx.transaction_date).toLocaleString('en-US', {
+                            year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
+                        });
+                        const amountClass = tx.type === 'credit' ? 'credit' : 'debit';
+                        const sign = tx.type === 'credit' ? '+' : '-';
+
+                        html += `
+                            <tr>
+                                <td>${date}</td>
+                                <td>${tx.type.charAt(0).toUpperCase() + tx.type.slice(1)}</td>
+                                <td>${tx.description}</td>
+                                <td class="${amountClass}">${sign}$${parseFloat(tx.amount).toFixed(2)}</td>
+                            </tr>
+                        `;
+                    });
+                    
+                    html += '</tbody></table>';
+                    historyContainer.innerHTML = html;
+                } else if (data.success) {
+                    historyContainer.innerHTML = '<p>No transactions recorded yet.</p>';
+                } else {
+                    historyContainer.innerHTML = `<p class="error-message">${data.message}</p>`;
+                }
+            })
+            .catch(error => {
+                console.error('Fetch error:', error);
+                historyContainer.innerHTML = '<p class="error-message">A connection error occurred. Could not load history.</p>';
+            });
+        }
+
+        function addFunds() {
+            const inputElement = document.getElementById('add-funds-input');
+            const amount = parseFloat(inputElement.value);
+            const messageElement = document.getElementById('add-funds-message');
+            
+            messageElement.style.display = 'none';
+            messageElement.className = '';
+            
+            if (isNaN(amount) || amount <= 0) {
+                messageElement.innerText = "Please enter a valid amount.";
+                messageElement.className = "error-message";
+                messageElement.style.display = 'block';
+                return;
+            }
+
+            fetch('wallet.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'add_funds', amount: amount })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    messageElement.innerText = `Funds successfully added! New balance: $${data.newBalance}`;
+                    messageElement.className = "credit";
+                    // Reload data after successful transaction
+                    loadWalletData();
+                } else {
+                    messageElement.innerText = `Failed to add funds: ${data.message}`;
+                    messageElement.className = "error-message";
+                }
+                messageElement.style.display = 'block';
+            })
+            .catch(error => {
+                console.error('Add funds fetch error:', error);
+                messageElement.innerText = "A connection error occurred. Could not add funds.";
+                messageElement.className = "error-message";
+                messageElement.style.display = 'block';
+            });
+        }
+        
+        function logout() {
+            alert('Logging out...');
+            // window.location.href = 'login.html'; 
+        }
+    </script>
+</body>
+</html>

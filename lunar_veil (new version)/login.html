@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Lunar Veil Cafe ☕ — User Login</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    /* Inherit base styles for dark, space theme */
+    :root{
+      --color-dark: #0A0A1F;
+      --color-primary: #8A2BE2; 
+      --color-secondary: #FFD700; 
+      --color-accent: #2c254b; 
+      --color-light: #E0E0E0; 
+      --color-error: #FF6347; 
+      --font-heading: 'Cinzel', serif;
+      --font-body: 'Inter', sans-serif;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;min-height:100vh;font-family:var(--font-body);background-color:var(--color-dark);color:var(--color-light);
+      background-image: radial-gradient(var(--color-accent) 1px, transparent 0), radial-gradient(var(--color-accent) 1px, transparent 0);
+      background-size:80px 80px;background-position:0 0,40px 40px;
+      display: flex; 
+      justify-content: center;
+      align-items: center;
+    }
+    .form-card {
+        width: 100%;
+        max-width: 400px; 
+        padding: 40px;
+        background-color: #1a1a36; 
+        border-radius: 12px;
+        box-shadow: 0 0 25px rgba(0, 0, 0, 0.7);
+    }
+    .form-card h2 {
+        font-family: var(--font-heading);
+        color: var(--color-primary); 
+        text-align: center;
+        margin-bottom: 30px;
+        font-size: 1.8rem;
+    }
+    .form-group {
+        margin-bottom: 20px;
+    }
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: var(--color-light);
+    }
+    .form-group input, .form-group select {
+        width: 100%;
+        padding: 12px;
+        background-color: var(--color-dark);
+        border: 1px solid var(--color-accent);
+        border-radius: 6px;
+        color: var(--color-light);
+        font-size: 1rem;
+        transition: border-color 0.3s;
+    }
+    .form-group input:focus, .form-group select:focus {
+        border-color: var(--color-primary);
+        outline: none;
+    }
+    .btn {
+        width: 100%; 
+        padding: 15px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: background-color 0.3s;
+    }
+    .btn.primary {
+        background-color: var(--color-primary);
+        color: var(--color-light);
+    }
+    .btn.primary:hover {
+        background-color: #9b47e5;
+    }
+    .switch-link {
+        display: block;
+        text-align: center;
+        margin-top: 20px;
+        font-size: 0.9rem;
+    }
+    .switch-link a {
+        color: var(--color-secondary);
+        font-weight: 600;
+        text-decoration: none;
+    }
+    .switch-link a:hover {
+        text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <main>
+    <div class="form-card">
+        <h2>USER LOGIN</h2>
+        <form id="login-form">
+            <div class="form-group">
+                <label for="login-email">Email Address</label>
+                <input type="email" id="login-email" required>
+            </div>
+            <div class="form-group">
+                <label for="login-password">Password</label>
+                <input type="password" id="login-password" required>
+            </div>
+            <button type="submit" class="btn primary">LOGIN TO LUNAR VEIL</button>
+        </form>
+        <p class="switch-link">
+            Don't have an account? <a href="register.html">Register Here</a>
+        </p>
+    </div>
+  </main>
+
+<script>
+    const authUrl = 'auth.php'; 
+    
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const email = document.getElementById('login-email').value;
+        const password = document.getElementById('login-password').value;
+        
+        if (!email || !password) {
+            alert('Please enter both email and password.');
+            return;
+        }
+
+        try {
+            const response = await fetch(authUrl, {
+                method: 'POST', 
+                body: JSON.stringify({ action: 'login', email: email, password: password }),
+                headers: { 'Content-Type': 'application/json' }
+            });
+            const data = await response.json();
+
+            if (data.success) {
+                window.location.href = 'profile.html';
+            } else {
+                alert(data.message || 'Login failed. Please check your credentials.');
+            }
+        } catch (error) {
+            console.error("Login Error:", error);
+            alert('A connection error occurred. Please try again.');
+        }
+    });
+
+    // Check if the user is already logged in (redirects if logged in)
+    async function checkExistingLogin() {
+        const response = await fetch(authUrl, {
+            method: 'POST', body: JSON.stringify({ action: 'status' }),
+            headers: { 'Content-Type': 'application/json' }
+        });
+        const data = await response.json();
+        
+        if (data.isLoggedIn) {
+            window.location.href = 'profile.html';
+        }
+    }
+    document.addEventListener('DOMContentLoaded', checkExistingLogin);
+</script>
+
+</body>
+</html>
