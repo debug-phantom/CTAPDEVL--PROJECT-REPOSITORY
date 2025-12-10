@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Lunar Veil Cafe ☕ — Wallet</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    /* ... (Shared styles for consistency) ... */
+    :root{
+      --color-dark: #0A0A1F;
+      --color-primary: #8A2BE2; 
+      --color-secondary: #FFD700; 
+      --color-accent: #2c254b; 
+      --color-light: #E0E0E0; 
+      --color-error: #FF6347; 
+      --font-heading: 'Cinzel', serif;
+      --font-body: 'Inter', sans-serif;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;min-height:100vh;font-family:var(--font-body);background-color:var(--color-dark);color:var(--color-light);
+      background-image: radial-gradient(var(--color-accent) 1px, transparent 0), radial-gradient(var(--color-accent) 1px, transparent 0);
+      background-size:80px 80px;background-position:0 0,40px 40px;
+      padding-bottom: 50px;
+    }
+    header{
+        background-color: var(--color-accent);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+        padding: 1rem 1.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+    }
+    .logo-title {
+        font-family: var(--font-heading);
+        font-size: 1.8rem;
+        color: var(--color-secondary);
+        text-shadow: 0 0 8px var(--color-primary);
+        line-height: 1;
+    }
+    .container {
+        max-width: 700px;
+        margin: 0 auto;
+        padding: 1.5rem;
+    }
+    .card {
+        background-color: #1a1a3a;
+        padding: 1.5rem;
+        border-radius: 12px;
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+        border: 1px solid var(--color-primary);
+    }
+    .nav-button {
+        background-color: var(--color-primary);
+        color: var(--color-dark);
+        border: none;
+        padding: 0.75rem 1.25rem;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: background-color 0.3s, transform 0.2s, box-shadow 0.2s;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        text-decoration: none;
+    }
+    .nav-button.secondary {
+        background-color: transparent;
+        color: var(--color-primary);
+        border: 2px solid var(--color-primary);
+        padding: 0.65rem 1.15rem;
+    }
+    .message { 
+        padding: 1rem; 
+        border-radius: 8px; 
+        margin-top: 1rem; 
+        font-weight: 500; 
+        text-align: center; 
+    } 
+    .message.success { 
+        background-color: #1a3a1a; 
+        color: #90ee90; 
+    } 
+    .message.error { 
+        background-color: #3a1a1a; 
+        color: var(--color-error); 
+    }
+    /* Wallet Specific Styles */
+    .balance-display {
+        background-color: #0d0d26;
+        padding: 1.5rem;
+        border-radius: 8px;
+        text-align: center;
+        margin-bottom: 2rem;
+        border: 2px solid var(--color-secondary);
+        box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+    }
+    .balance-display h2 {
+        margin-top: 0;
+        color: var(--color-primary);
+        font-family: var(--font-heading);
+    }
+    .balance-display p {
+        font-size: 3rem;
+        font-weight: 700;
+        color: var(--color-secondary);
+        margin: 0;
+    }
+    .wallet-form {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+    }
+    .wallet-form form {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+    .wallet-form input {
+        padding: 10px;
+        border: 1px solid #4a4a70;
+        border-radius: 4px;
+        background-color: var(--color-dark);
+        color: var(--color-light);
+        font-size: 1rem;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+    <div class="logo-title">Lunar Veil Cafe ☕</div>
+    <nav>
+        <a href="index.html" class="nav-button secondary">Home</a>
+        <a href="menu.html" class="nav-button secondary"><i data-lucide="coffee"></i> Menu</a>
+        <a href="wallet.html" class="nav-button"><i data-lucide="wallet"></i> Wallet</a>
+        <a href="tracking.html" class="nav-button secondary"><i data-lucide="car"></i> Tracking</a>
+        <a href="cart.html" class="nav-button secondary"><i data-lucide="shopping-cart"></i> Cart <span id="cart-count"></span></a>
+    </nav>
+    <div class="header-actions">
+        <div id="user-info" style="display: flex; align-items: center; gap: 1rem;">
+            <span id="welcome-user">Hello, Guest!</span>
+            <span id="wallet-balance-header" class="card" style="padding: 0.5rem 1rem; font-weight: 600; margin: 0;">Balance: $0.00</span>
+        </div>
+        <button id="logout-btn" class="nav-button secondary">
+            <i data-lucide="log-out" style="width: 18px; height: 18px;"></i> Logout
+        </button>
+    </div>
+</header>
+
+<main class="container">
+    <h2 style="font-family: var(--font-heading); color: var(--color-secondary); text-align: center;">Your Wallet</h2>
+    
+    <div class="balance-display">
+        <h2>Current Balance</h2>
+        <p id="current-balance">$0.00</p>
+    </div>
+
+    <div id="walletMessageArea"></div>
+
+    <div class="wallet-form">
+        <div class="card">
+            <h3 style="color: var(--color-primary); margin-top: 0;"><i data-lucide="plus-circle" style="width: 20px; height: 20px; display: inline-block; vertical-align: middle;"></i> Add Balance</h3>
+            <form id="add-funds-form">
+                <input type="number" id="add-amount" placeholder="Amount to Add ($)" min="1" step="0.01" required>
+                <button type="submit" class="nav-button">
+                    <i data-lucide="send" style="width: 18px; height: 18px;"></i> Add Funds
+                </button>
+            </form>
+        </div>
+
+        <div class="card">
+            <h3 style="color: var(--color-primary); margin-top: 0;"><i data-lucide="minus-circle" style="width: 20px; height: 20px; display: inline-block; vertical-align: middle;"></i> Withdraw Balance</h3>
+            <form id="withdraw-funds-form">
+                <input type="number" id="withdraw-amount" placeholder="Amount to Withdraw ($)" min="1" step="0.01" required>
+                <button type="submit" class="nav-button" style="background-color: var(--color-error);">
+                    <i data-lucide="credit-card" style="width: 18px; height: 18px;"></i> Withdraw Funds
+                </button>
+            </form>
+        </div>
+    </div>
+    
+    <div class="card" style="margin-top: 2rem; text-align: center;">
+        <a href="transactions.html" class="nav-button secondary" style="width: 100%;">
+            <i data-lucide="list-ordered" style="width: 18px; height: 18px;"></i> View Transaction History
+        </a>
+    </div>
+
+</main>
+
+<script>
+    const walletMessageArea = document.getElementById('walletMessageArea');
+    const currentBalanceDisplay = document.getElementById('current-balance');
+    const headerBalanceDisplay = document.getElementById('wallet-balance-header');
+    
+    function renderCartCount() {
+        let cart = [];
+        try {
+            const cartData = localStorage.getItem('cafeCart');
+            if (cartData) {
+                cart = JSON.parse(cartData);
+            }
+        } catch (e) {
+            console.error("Failed to parse cafeCart from localStorage:", e);
+        }
+
+        const totalItems = Array.isArray(cart) 
+            ? cart.reduce((total, item) => total + (item.quantity || 0), 0) 
+            : 0;
+        
+        const cartCountSpan = document.getElementById('cart-count');
+        
+        if (cartCountSpan) {
+            cartCountSpan.textContent = `(${totalItems})`;
+        }
+    }
+    
+    function displayMessage(message, type) {
+        walletMessageArea.innerHTML = `<div class="message ${type}">${message}</div>`;
+        setTimeout(() => { walletMessageArea.innerHTML = ''; }, 5000);
+    }
+    
+    async function loadWalletBalance() {
+        try {
+            const response = await fetch('wallet.php', {
+                method: 'POST', body: JSON.stringify({ action: 'get_balance' }),
+                headers: { 'Content-Type': 'application/json' }
+            });
+            const data = await response.json();
+
+            if (data.success) {
+                const balance = parseFloat(data.balance).toFixed(2);
+                currentBalanceDisplay.textContent = `$${balance}`;
+                headerBalanceDisplay.textContent = `Balance: $${balance}`;
+            } else {
+                currentBalanceDisplay.textContent = `$Error`;
+                headerBalanceDisplay.textContent = `Balance: $Error`;
+            }
+        } catch (error) {
+            console.error('Error fetching balance:', error);
+            currentBalanceDisplay.textContent = `$Connection Error`;
+            headerBalanceDisplay.textContent = `Balance: $Error`;
+        }
+    }
+    
+    async function checkLoginStatus() {
+        const welcomeUserSpan = document.getElementById('welcome-user');
+        try {
+            const response = await fetch('auth.php', { method: 'POST', body: JSON.stringify({ action: 'status' }), headers: { 'Content-Type': 'application/json' } });
+            const data = await response.json();
+            if (!data.isLoggedIn) {
+                window.location.href = 'login.html';
+            } else {
+                // FIX: Dynamic Username Sync
+                welcomeUserSpan.textContent = `Welcome, ${data.username}!`; 
+                
+                loadWalletBalance();
+                renderCartCount(); 
+                lucide.createIcons();
+            }
+        } catch (error) { 
+            console.error('Error checking login status:', error); 
+            welcomeUserSpan.textContent = 'Connection Error'; 
+        }
+    }
+
+    document.getElementById('logout-btn').addEventListener('click', async () => {
+        await fetch('auth.php', { method: 'POST', body: JSON.stringify({ action: 'logout' }), headers: { 'Content-Type': 'application/json' } });
+        window.location.href = 'login.html';
+    });
+
+    document.getElementById('add-funds-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const amountInput = document.getElementById('add-amount');
+        const amount = parseFloat(amountInput.value);
+
+        if (isNaN(amount) || amount <= 0) { displayMessage('Please enter a valid amount to add.', 'error'); return; }
+        if (!confirm(`Confirm adding $${amount.toFixed(2)} to your balance?`)) { return; }
+
+        try {
+            const response = await fetch('wallet.php', {
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'add_funds', amount: amount.toFixed(2) })
+            });
+            const data = await response.json();
+
+            if (data.success) {
+                displayMessage(`Successfully added $${amount.toFixed(2)}. New balance: $${parseFloat(data.newBalance).toFixed(2)}`, 'success');
+                loadWalletBalance();
+                amountInput.value = '';
+            } else {
+                displayMessage(`Add Funds Failed: ${data.message}`, 'error');
+            }
+        } catch (error) {
+            console.error('Add funds error:', error);
+            displayMessage('A connection error occurred. Could not add funds.', 'error');
+        }
+    });
+    
+    document.getElementById('withdraw-funds-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const amountInput = document.getElementById('withdraw-amount');
+        const amount = parseFloat(amountInput.value);
+
+        if (isNaN(amount) || amount <= 0) { displayMessage('Please enter a valid amount to withdraw.', 'error'); return; }
+        if (!confirm(`Confirm withdrawing $${amount.toFixed(2)} from your balance?`)) { return; }
+
+        try {
+            const response = await fetch('wallet.php', {
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'withdraw_funds', amount: amount.toFixed(2) })
+            });
+            const data = await response.json();
+
+            if (data.success) {
+                displayMessage(`Successfully withdrew $${amount.toFixed(2)}. New balance: $${parseFloat(data.newBalance).toFixed(2)}`, 'success');
+                loadWalletBalance();
+                amountInput.value = '';
+            } else {
+                displayMessage(`Withdrawal Failed: ${data.message || 'Server error or action not implemented.'}`, 'error');
+            }
+        } catch (error) {
+            console.error('Withdraw funds error:', error);
+            displayMessage('A connection error occurred. Could not process withdrawal.', 'error');
+        }
+    });
+
+    document.addEventListener('DOMContentLoaded', checkLoginStatus);
+</script>
+
+</body>
+</html>

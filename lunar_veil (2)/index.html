@@ -1,0 +1,500 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Lunar Veil Cafe ☕ — Home</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    /* Global Styles (Preserved look) */
+    :root{
+      --color-dark: #0A0A1F;
+      --color-primary: #8A2BE2; 
+      --color-secondary: #FFD700; 
+      --color-accent: #2c254b; 
+      --color-light: #E0E0E0; 
+      --color-error: #FF6347; 
+      --font-heading: 'Cinzel', serif;
+      --font-body: 'Inter', sans-serif;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;min-height:100vh;font-family:var(--font-body);background-color:var(--color-dark);color:var(--color-light);
+      background-image: radial-gradient(var(--color-accent) 1px, transparent 0), radial-gradient(var(--color-accent) 1px, transparent 0);
+      background-size:80px 80px;background-position:0 0,40px 40px;
+    }
+    /* Header/Nav Styles */
+    .header{
+        background-color: var(--color-accent);
+        padding: 15px 30px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    }
+    .nav {
+        display: flex;
+        align-items: center;
+        flex-grow: 1; 
+        margin-left: 30px;
+    }
+    .nav a {
+        color: var(--color-light);
+        margin-right: 30px; 
+        font-weight: 600;
+        transition: color 0.3s;
+        text-decoration: none;
+        padding: 5px 0;
+    }
+    .nav a:hover {
+        color: var(--color-secondary);
+    }
+    .logo{
+        font-family: var(--font-heading);
+        font-size: 1.5rem;
+        color: var(--color-primary);
+        display: flex;
+        align-items: center;
+    }
+    .btn {
+        padding: 5px 10px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: background-color 0.3s;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        margin-left: 10px; 
+    }
+    .btn.primary {
+        background-color: var(--color-primary);
+        color: var(--color-light);
+    }
+    .btn.primary:hover {
+        background-color: #9b47e5;
+    }
+    /* Hero/Content Styles */
+    .hero {
+        text-align: center;
+        padding: 100px 20px 80px;
+    }
+    .hero h1 {
+        font-family: var(--font-heading);
+        font-size: 3rem;
+        color: var(--color-secondary);
+        margin-bottom: 20px;
+    }
+    .hero p {
+        font-size: 1.2rem;
+        color: var(--color-light);
+        margin-bottom: 30px;
+    }
+    .menu-btn {
+        background-color: var(--color-primary);
+        color: var(--color-light);
+        font-size: 1.1rem;
+        padding: 15px 30px;
+        border-radius: 8px;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        margin-top: 20px;
+    }
+    /* Slideshow Styles */
+    .slideshow-container {
+        max-width: 1000px;
+        position: relative;
+        margin: auto;
+        padding: 20px 0;
+    }
+    .mySlides {
+        /* CRITICAL: display: none hides all slides by default until JS runs */
+        display: none; 
+        background-color: #1a1a36; 
+        padding: 40px;
+        border-radius: 12px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        text-align: center;
+        min-height: 200px;
+    }
+    .slide-heading {
+        font-family: var(--font-heading);
+        color: var(--color-primary);
+        font-size: 2rem;
+        margin-bottom: 15px;
+    }
+    .slide-text {
+        font-size: 1.1rem;
+        color: var(--color-light);
+    }
+    .prev, .next {
+        cursor: pointer;
+        position: absolute;
+        top: 50%;
+        width: auto;
+        margin-top: -22px;
+        padding: 16px;
+        color: var(--color-light);
+        font-weight: bold;
+        font-size: 18px;
+        transition: 0.6s ease;
+        border-radius: 0 3px 3px 0;
+        user-select: none;
+        background-color: rgba(0,0,0,0.5);
+    }
+    .next {
+        right: 0;
+        border-radius: 3px 0 0 3px;
+    }
+    .prev:hover, .next:hover {
+        background-color: rgba(0,0,0,0.8);
+    }
+    .dot-container {
+        text-align: center;
+        padding: 10px;
+    }
+    .dot {
+        cursor: pointer;
+        height: 15px;
+        width: 15px;
+        margin: 0 2px;
+        background-color: #bbb;
+        border-radius: 50%;
+        display: inline-block;
+        transition: background-color 0.6s ease;
+    }
+    .active, .dot:hover {
+        background-color: var(--color-primary);
+    }
+
+    /* Featured Content Styles */
+    .featured-heading {
+        font-family: var(--font-heading);
+        font-size: 2rem;
+        color: var(--color-primary);
+        text-align: center;
+        padding: 50px 0 30px; 
+    }
+    .menu-grid {
+        display: flex;
+        justify-content: center;
+        gap: 30px;
+        padding-bottom: 50px;
+    }
+    .menu-item {
+        background-color: #1a1a36; 
+        padding: 20px;
+        border-radius: 10px;
+        width: 250px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+        text-align: center;
+    }
+    .menu-item h3 {
+        font-family: var(--font-heading);
+        color: var(--color-secondary);
+        margin-top: 0;
+    }
+    .menu-item p {
+        font-size: 0.9rem;
+        color: var(--color-light);
+        margin-bottom: 15px;
+        min-height: 40px; 
+    }
+    .item-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .item-footer .price {
+        font-weight: 700;
+        color: var(--color-primary);
+        font-size: 1.2rem;
+    }
+    .item-footer .add-to-cart-btn {
+        background-color: var(--color-primary);
+        color: var(--color-light);
+        padding: 8px 15px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <a href="index.html" class="logo">
+        <i data-lucide="moon" style="width: 24px; height: 24px;"></i>
+        LUNAR VEIL CAFE ☕
+    </a>
+    <nav class="nav">
+        <a href="index.html">Home</a>
+        <a href="menu.html">Menu</a>
+        <a href="transactions.html">Wallet</a>
+        <a href="tracking.html">Tracking</a>
+        <a href="cart.html">Cart (<span id="cart-count">0</span>)</a>
+        <a id="profile-link" href="profile.html" style="display:none; margin-left: 20px;">Profile</a> 
+    </nav>
+    <div id="user-status-area" style="color: var(--color-light); font-weight: 600; white-space: nowrap;">
+        Loading Status...
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+        <h1>CELESTIAL BREWS & COSMIC BITES</h1>
+        <p>Experience the otherworldly taste of the Lunar Veil Cafe.</p>
+        <a href="menu.html" class="menu-btn">
+            View Full Menu <i data-lucide="arrow-right" style="width: 20px; height: 20px; margin-left: 10px;"></i>
+        </a>
+    </section>
+
+    <div class="slideshow-container">
+        <div class="mySlides fade">
+            <h2 class="slide-heading">📄 Menu & Ordering</h2>
+            <p class="slide-text">Browse our full selection of Celestial Brews and Cosmic Bites, and place your order instantly.</p>
+        </div>
+
+        <div class="mySlides fade">
+            <h2 class="slide-heading">💳 Integrated Wallet</h2>
+            <p class="slide-text">Load funds, manage your balance, and view all past transactions effortlessly.</p>
+        </div>
+
+        <div class="mySlides fade">
+            <h2 class="slide-heading">🛰️ Real-Time Tracking</h2>
+            <p class="slide-text">Follow your order from preparation to pickup with our live tracking system.</p>
+        </div>
+        
+        <div class="mySlides fade">
+            <h2 class="slide-heading">👤 Personal Profile</h2>
+            <p class="slide-text">Manage your personal details, check your member status, and update your preferences.</p>
+        </div>
+        
+        <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+        <a class="next" onclick="plusSlides(1)">&#10095;</a>
+    </div>
+
+    <div class="dot-container">
+        <span class="dot" onclick="currentSlide(1)"></span>
+        <span class="dot" onclick="currentSlide(2)"></span>
+        <span class="dot" onclick="currentSlide(3)"></span>
+        <span class="dot" onclick="currentSlide(4)"></span>
+    </div>
+
+    <h2 class="featured-heading">FEATURED ITEMS</h2>
+    <section class="menu-grid">
+        <div class="menu-item" data-id="1" data-name="Double Shot Veil" data-price="5.50">
+            <h3>DOUBLE SHOT VEIL</h3>
+            <p>Potent double shot of our signature blend.</p>
+            <div class="item-footer">
+                <span class="price">$5.50</span>
+                <button class="btn primary add-to-cart-btn">Add</button> 
+            </div>
+        </div>
+        <div class="menu-item" data-id="2" data-name="Midnight Espresso" data-price="4.50">
+            <h3>MIDNIGHT ESPRESSO</h3>
+            <p>Dark roast with a velvet finish, single shot.</p>
+            <div class="item-footer">
+                <span class="price">$4.50</span>
+                <button class="btn primary add-to-cart-btn">Add</button>
+            </div>
+        </div>
+        <div class="menu-item" data-id="3" data-name="Nova Americano" data-price="4.00">
+            <h3>NOVA AMERICANO</h3>
+            <p>Espresso diluted with hot water for a smooth finish.</p>
+            <div class="item-footer">
+                <span class="price">$4.00</span>
+                <button class="btn primary add-to-cart-btn">Add</button>
+            </div>
+        </div>
+    </section>
+  </main>
+
+<script>
+    const authUrl = 'auth.php'; 
+    let slideIndex = 1;
+    let slideshowTimeout;
+    
+    // --- CART FIX: Use the correct, consistent key ---
+    const CART_STORAGE_KEY = 'cafeCart'; 
+    const cartCountElement = document.getElementById('cart-count');
+    let cartItems = []; 
+    
+    // **CART LOGIC (Corrected and Robust)**
+    function loadCart() {
+        const storedCart = localStorage.getItem(CART_STORAGE_KEY);
+        if (storedCart) {
+            try {
+                cartItems = JSON.parse(storedCart);
+            } catch (e) {
+                console.error("Error parsing cart data from local storage", e);
+                cartItems = [];
+            }
+        }
+        updateCartCount();
+    }
+    
+    function saveCart() {
+        localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cartItems));
+    }
+
+    function updateCartCount() {
+        const totalItems = cartItems.reduce((total, item) => total + item.quantity, 0);
+        cartCountElement.textContent = totalItems;
+    }
+
+    function addToCart(event) {
+        const itemContainer = event.currentTarget.closest('.menu-item'); // Use currentTarget for buttons
+        
+        if (!itemContainer) return; // Safety check
+
+        const itemId = itemContainer.getAttribute('data-id');
+        const itemName = itemContainer.getAttribute('data-name');
+        const itemPrice = parseFloat(itemContainer.getAttribute('data-price'));
+
+        if (itemId && itemName && !isNaN(itemPrice)) {
+            const existingItem = cartItems.find(item => item.id === itemId);
+            
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cartItems.push({
+                    id: itemId,
+                    name: itemName,
+                    price: itemPrice,
+                    quantity: 1 
+                });
+            }
+            
+            saveCart();
+            updateCartCount();
+
+            // Visual feedback
+            const button = event.currentTarget;
+            const originalText = button.textContent;
+            button.textContent = 'Added!';
+            setTimeout(() => button.textContent = originalText, 500);
+        }
+    }
+    
+    // **SLIDESHOW LOGIC**
+    function showSlides(n) {
+        let i;
+        let slides = document.getElementsByClassName("mySlides");
+        let dots = document.getElementsByClassName("dot");
+        
+        clearTimeout(slideshowTimeout);
+
+        if (slides.length === 0) return;
+        
+        if (n > slides.length) {slideIndex = 1}    
+        if (n < 1) {slideIndex = slides.length}
+        
+        for (i = 0; i < slides.length; i++) {
+            slides[i].style.display = "none";  
+        }
+        for (i = 0; i < dots.length; i++) {
+            dots[i].className = dots[i].className.replace(" active", "");
+        }
+        
+        slides[slideIndex-1].style.display = "block"; 
+        dots[slideIndex-1].className += " active";
+        
+        slideshowTimeout = setTimeout(autoSlide, 4000); 
+    }
+
+    function plusSlides(n) {
+      showSlides(slideIndex += n);
+    }
+
+    function currentSlide(n) {
+      showSlides(slideIndex = n);
+    }
+
+    function autoSlide() {
+        plusSlides(1);
+    }
+    
+    // **HEADER LOGIC**
+    async function handleLogout() {
+        await fetch(authUrl, { 
+            method: 'POST', 
+            body: JSON.stringify({ action: 'logout' }), 
+            headers: { 'Content-Type': 'application/json' } 
+        });
+        window.location.href = 'index.html'; 
+    }
+
+    async function updateHeaderStatus() {
+        const statusDiv = document.getElementById('user-status-area');
+        const profileLink = document.getElementById('profile-link');
+        
+        try {
+            const response = await fetch(authUrl, {
+                method: 'POST', body: JSON.stringify({ action: 'status' }),
+                headers: { 'Content-Type': 'application/json' }
+            });
+            
+            if (!response.ok) {
+                console.error(`auth.php failed with status: ${response.status}`);
+                statusDiv.innerHTML = `<span style="color: var(--color-error);">Status Check Failed (${response.status})</span>`;
+                profileLink.style.display = 'none';
+                return;
+            }
+
+            const data = await response.json();
+
+            if (data.isLoggedIn) {
+                const formattedBalance = parseFloat(data.balance).toFixed(2);
+                
+                let userRole = data.role.toUpperCase();
+                if (userRole === '0') {
+                    userRole = 'CUSTOMER';
+                }
+                
+                statusDiv.innerHTML = `
+                    Welcome, <b>${data.username}</b>! | 
+                    Role: <b>${userRole}</b> | 
+                    Balance: <b>$${formattedBalance}</b> 
+                    <button id="logout-btn" class="btn primary">
+                        <i data-lucide="log-out" style="width: 18px; height: 18px;"></i> Logout
+                    </button>
+                `;
+                
+                profileLink.style.display = 'inline-block';
+                lucide.createIcons(); // FIX: Create icons AFTER inserting the dynamic HTML
+                document.getElementById('logout-btn').addEventListener('click', handleLogout);
+
+            } else {
+                statusDiv.innerHTML = `<a href="login.html" style="color: var(--color-secondary); font-weight: 600;">Login / Register</a>`;
+                profileLink.style.display = 'none';
+            }
+        } catch (error) {
+            console.error("Error fetching or processing status:", error);
+            statusDiv.innerHTML = `<span style="color: var(--color-error);">Network/Script Error</span>`; 
+            profileLink.style.display = 'none';
+        }
+    }
+    
+    document.addEventListener('DOMContentLoaded', () => {
+        updateHeaderStatus();
+        loadCart(); // FIX: Load cart on page load
+        showSlides(slideIndex); 
+        
+        // Setup Add to Cart buttons
+        const addButtons = document.querySelectorAll('.add-to-cart-btn');
+        addButtons.forEach(button => {
+            button.addEventListener('click', addToCart);
+        });
+        
+        // Render Lucide icons for all static elements
+        lucide.createIcons(); 
+    });
+</script>
+
+</body>
+</html>

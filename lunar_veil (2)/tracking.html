@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order History & Tracking | Lunar Veil Cafe</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        /* Shared Styles (Consistent with wallet.html) */
+        :root{
+            --color-dark: #0A0A1F;
+            --color-primary: #8A2BE2; 
+            --color-secondary: #FFD700; 
+            --color-accent: #2c254b; 
+            --color-light: #E0E0E0; 
+            --color-error: #FF6347; 
+            --font-heading: 'Cinzel', serif;
+            --font-body: 'Inter', sans-serif;
+        }
+        *{box-sizing:border-box}
+        body {
+            margin:0;min-height:100vh;font-family:var(--font-body);background-color:var(--color-dark);color:var(--color-light);
+            background-image: radial-gradient(var(--color-accent) 1px, transparent 0), radial-gradient(var(--color-accent) 1px, transparent 0);
+            background-size:80px 80px;background-position:0 0,40px 40px;
+            padding-bottom: 50px;
+        }
+        header {
+            background-color: var(--color-accent);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        .logo-title {
+            font-family: var(--font-heading);
+            font-size: 1.8rem;
+            color: var(--color-secondary);
+            text-shadow: 0 0 8px var(--color-primary);
+            line-height: 1;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 1.5rem;
+        }
+        .card {
+            background-color: #1a1a3a;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--color-primary);
+        }
+        .nav-button {
+            background-color: var(--color-primary);
+            color: var(--color-dark);
+            border: none;
+            padding: 0.75rem 1.25rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.3s, transform 0.2s, box-shadow 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+        .nav-button.secondary {
+            background-color: transparent;
+            color: var(--color-primary);
+            border: 2px solid var(--color-primary);
+            padding: 0.65rem 1.15rem;
+        }
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        /* Tracking Specific Styles */
+        .main-title {
+            color: var(--color-secondary);
+            font-family: var(--font-heading);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .sub-title {
+            color: var(--color-light);
+            font-family: var(--font-heading);
+            margin-top: 40px;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        /* Status Card */
+        .status-tracker {
+            display: flex;
+            justify-content: space-around;
+            text-align: center;
+            margin: 30px 0;
+            padding: 20px 0;
+            border-bottom: 1px solid #4a4a70;
+        }
+        .status-step {
+            position: relative;
+            flex-grow: 1;
+            padding: 0 10px;
+        }
+        .status-icon {
+            font-size: 2em;
+            color: #4a4a70;
+            transition: color 0.5s;
+        }
+        .status-label {
+            font-size: 0.9em;
+            margin-top: 5px;
+            color: #8A8A9F;
+            font-weight: 500;
+        }
+        .status-step.active .status-icon {
+            color: var(--color-secondary);
+        }
+        .status-step.active .status-label {
+            color: var(--color-light);
+        }
+        .status-step.completed .status-icon {
+            color: #00e676; /* Green */
+        }
+        /* History Table */
+        .history-table table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #2b1d4c;
+            border-radius: 8px;
+            overflow: hidden;
+            text-align: left;
+        }
+        .history-table th, .history-table td {
+            padding: 15px;
+            border-bottom: 1px solid #3c2a63;
+        }
+        .history-table th {
+            background-color: #3c2a63;
+            color: var(--color-secondary);
+        }
+        .status-Pending { color: var(--color-secondary); }
+        .status-Processing { color: var(--color-primary); }
+        .status-ReadyForPickup { color: #00e676; }
+        .status-Delivered { color: #00e676; }
+        .status-Cancelled { color: var(--color-error); }
+        .no-history, .error-message {
+            padding: 20px;
+            margin-top: 20px;
+            background-color: #3a1a1a;
+            color: var(--color-error);
+            border-radius: 8px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo-title">Lunar Veil Cafe ☕</div>
+        <nav>
+            <a href="index.html" class="nav-button secondary"><i data-lucide="home"></i> Home</a> 
+            <a href="menu.html" class="nav-button secondary"><i data-lucide="coffee"></i> Menu</a>
+            <a href="wallet.html" class="nav-button secondary"><i data-lucide="wallet"></i> Wallet</a>
+            <a href="tracking.html" class="nav-button"><i data-lucide="car"></i> Tracking</a>
+            <a href="cart.html" class="nav-button secondary"><i data-lucide="shopping-cart"></i> Cart <span id="cart-count"></span></a>
+        </nav>
+        <div class="header-actions">
+            <div class="user-info">
+                <span id="welcome-user">Hello, Guest!</span> 
+                <span id="wallet-balance-header" class="card" style="padding: 0.5rem 1rem; font-weight: 600; margin: 0;">Balance: $0.00</span>
+            </div>
+            <button id="logout-btn" class="nav-button secondary">
+                <i data-lucide="log-out" style="width: 18px; height: 18px;"></i> Logout
+            </button>
+        </div>
+    </header>
+
+    <main class="container">
+        <h1 class="main-title">ORDER TRACKING</h1>
+        
+        <div id="latest-order-summary" class="card">
+            <h2 class="sub-title" style="margin-top: 0; text-align: center;">Latest Order Status</h2>
+            <div id="tracking-summary-content">
+                <p>Loading latest order status...</p>
+            </div>
+        </div>
+
+        <h2 class="sub-title">ORDER HISTORY</h2>
+        <section id="history-container" class="history-table card">
+            <p>Loading order history...</p>
+        </section>
+    </main>
+
+    <script>
+        const authUrl = 'auth.php';
+        const trackingUrl = 'transactions_history.php'; // NOTE: Corrected URL to point to the PHP file that handles order history
+        
+        function renderCartCount() {
+            let cart = [];
+            try {
+                const cartData = localStorage.getItem('cafeCart');
+                if (cartData) {
+                    cart = JSON.parse(cartData);
+                }
+            } catch (e) {
+                console.error("Failed to parse cafeCart from localStorage:", e);
+            }
+
+            const totalItems = Array.isArray(cart) 
+                ? cart.reduce((total, item) => total + (item.quantity || 0), 0) 
+                : 0;
+            
+            const cartCountSpan = document.getElementById('cart-count');
+            
+            if (cartCountSpan) {
+                cartCountSpan.textContent = `(${totalItems})`;
+            }
+        }
+        
+        async function checkLoginStatus() {
+            const welcomeUserSpan = document.getElementById('welcome-user');
+            try {
+                const response = await fetch(authUrl, { 
+                    method: 'POST', 
+                    body: JSON.stringify({ action: 'status' }), 
+                    headers: { 'Content-Type': 'application/json' } 
+                });
+                const data = await response.json();
+
+                if (!data.isLoggedIn) {
+                    window.location.href = 'login.html';
+                } else {
+                    // FIX: Dynamic Username Sync
+                    welcomeUserSpan.textContent = `Welcome, ${data.username}!`; 
+                    
+                    loadWalletBalance(data.balance);
+                    loadOrderData();
+                    renderCartCount(); 
+                    lucide.createIcons();
+                }
+            } catch (error) { 
+                console.error('Error checking login status:', error); 
+                welcomeUserSpan.textContent = 'Connection Error'; 
+            }
+        }
+
+        function loadWalletBalance(balance) {
+             const headerBalanceDisplay = document.getElementById('wallet-balance-header');
+             if (headerBalanceDisplay) {
+                 const currentBalance = balance !== undefined 
+                     ? parseFloat(balance).toFixed(2) 
+                     : '0.00'; 
+                 headerBalanceDisplay.textContent = `Balance: $${currentBalance}`;
+             }
+        }
+
+        document.getElementById('logout-btn').addEventListener('click', async () => {
+            await fetch(authUrl, { method: 'POST', body: JSON.stringify({ action: 'logout' }), headers: { 'Content-Type': 'application/json' } });
+            window.location.href = 'login.html';
+        });
+
+        function getStatusStepHTML(currentStatus, id) {
+            const steps = [
+                { status: 'Pending', label: 'Order Placed', icon: 'clock' },
+                { status: 'Processing', label: 'Being Made', icon: 'coffee' },
+                { status: 'ReadyForPickup', label: 'Ready', icon: 'package-open' },
+                { status: 'Delivered', label: 'Complete', icon: 'check-circle' }
+            ];
+            
+            const statusMap = steps.reduce((acc, step, index) => {
+                acc[step.status] = index;
+                return acc;
+            }, {});
+
+            const currentStepIndex = statusMap[currentStatus] || 0;
+            const statusCanceled = currentStatus === 'Cancelled';
+
+            let html = `
+                <h3 style="color: var(--color-primary); margin-bottom: 1rem;">Order #${id} (${currentStatus})</h3>
+                ${statusCanceled ? 
+                    '<p class="status-Cancelled" style="font-weight: bold;">This order was cancelled.</p>' 
+                    : 
+                    '<div class="status-tracker">'
+                }
+            `;
+
+            if (!statusCanceled) {
+                steps.forEach((step, index) => {
+                    let stepClass = '';
+                    if (index < currentStepIndex) {
+                        stepClass = 'completed';
+                    } else if (index === currentStepIndex) {
+                        stepClass = 'active';
+                    }
+                    
+                    html += `
+                        <div class="status-step ${stepClass}">
+                            <i data-lucide="${step.icon}" class="status-icon"></i>
+                            <p class="status-label">${step.label}</p>
+                        </div>
+                    `;
+                });
+                html += '</div>';
+            }
+
+            return html;
+        }
+
+        async function loadOrderData() {
+            const summaryContainer = document.getElementById('tracking-summary-content');
+            const historyContainer = document.getElementById('history-container');
+            
+            summaryContainer.innerHTML = '<p style="text-align: center;">Fetching latest order...</p>';
+            historyContainer.innerHTML = '<p style="text-align: center;">Fetching order history...</p>';
+
+            try {
+                const response = await fetch(trackingUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    // FIX: Use the existing action 'get_order_history' from transactions_history.php
+                    body: JSON.stringify({ action: 'get_order_history' }) 
+                });
+                
+                const data = await response.json();
+
+                if (data.success) {
+                    // Check for latest order from history (The PHP returns an array named 'recent_orders')
+                    if (data.recent_orders && data.recent_orders.length > 0) {
+                        // Use the very first item (most recent) as the latest order
+                        const latestOrder = data.recent_orders[0]; 
+                        
+                        summaryContainer.innerHTML = getStatusStepHTML(latestOrder.status, latestOrder.id);
+                        lucide.createIcons();
+                    } else {
+                        summaryContainer.innerHTML = '<p>No recent orders found. Place an order from the <a href="menu.html" style="color: var(--color-secondary);">Menu</a>.</p>';
+                    }
+
+                    // Load all history
+                    if (data.recent_orders && data.recent_orders.length > 0) { 
+                        let html = '<table><thead><tr><th>Order ID</th><th>Date</th><th>Status</th><th>Total</th><th>Items</th></tr></thead><tbody>';
+                        
+                        // Iterate over data.recent_orders
+                        data.recent_orders.forEach(order => { 
+                            const statusClass = `status-${order.status.replace(/\s+/g, '')}`;
+                            html += `
+                                <tr>
+                                    <td>#${order.id}</td>
+                                    <td>${order.order_date}</td>
+                                    <td class="${statusClass}">${order.status}</td>
+                                    <td>$${order.total_amount}</td> 
+                                    <td>${order.items_summary}</td>
+                                </tr>
+                            `;
+                        });
+                        
+                        html += '</tbody></table>';
+                        historyContainer.innerHTML = html;
+                    } else {
+                        historyContainer.innerHTML = '<p class="no-history">You have no order history yet. Start ordering from our menu!</p>';
+                    }
+                } else {
+                    summaryContainer.innerHTML = `<p class="error-message">Error loading summary: ${data.message}</p>`;
+                    historyContainer.innerHTML = `<p class="error-message">${data.message || 'Error loading order history.'}</p>`;
+                }
+            } catch (error) {
+                console.error('Fetch error:', error);
+                summaryContainer.innerHTML = '<p class="error-message">A connection error occurred. Could not load tracking data.</p>';
+                historyContainer.innerHTML = '<p class="error-message">A connection error occurred. Could not load history.</p>';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', checkLoginStatus);
+    </script>
+</body>
+</html>

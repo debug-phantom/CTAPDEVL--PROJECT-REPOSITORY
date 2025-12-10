@@ -1,0 +1,593 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Lunar Veil Cafe ☕ — Menu</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    /* ------------------------------------- */
+    /* I. Global & Header Styles */
+    /* ------------------------------------- */
+    :root{
+      --color-dark: #0A0A1F;
+      --color-primary: #8A2BE2; /* Amethyst */
+      --color-secondary: #FFD700; /* Gold */
+      --color-accent: #2c254b; /* Deep Purple Background Accent */
+      --color-light: #E0E0E0; /* Off-White */
+      --color-error: #FF6347; /* Tomato */
+      --font-heading: 'Cinzel', serif;
+      --font-body: 'Inter', sans-serif;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;min-height:100vh;font-family:var(--font-body);background-color:var(--color-dark);color:var(--color-light);
+      background-image: radial-gradient(var(--color-accent) 1px, transparent 0), radial-gradient(var(--color-accent) 1px, transparent 0);
+      background-size:80px 80px;background-position:0 0,40px 40px;
+    }
+    .header{
+        background-color: var(--color-accent);
+        padding: 15px 30px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    }
+    .nav a {
+        color: var(--color-light);
+        margin-right: 30px; 
+        font-weight: 600;
+        transition: color 0.3s;
+        text-decoration: none;
+        padding: 5px 0;
+    }
+    .nav a:hover {
+        color: var(--color-secondary);
+    }
+    .logo{
+        font-family: var(--font-heading);
+        font-size: 1.5rem;
+        color: var(--color-primary);
+        display: flex;
+        align-items: center;
+    }
+    .btn{
+      padding:10px 20px;border:none;border-radius:5px;cursor:pointer;font-weight:600;transition:background-color 0.3s;
+      display:inline-flex;align-items:center;gap:8px;text-decoration:none;
+    }
+    .btn-primary{
+      background-color:var(--color-primary);color:var(--color-light);
+    }
+    .btn-primary:hover{
+      background-color: #9b47e5; 
+    }
+    
+    /* ------------------------------------- */
+    /* II. Menu Grid & Category Styles */
+    /* ------------------------------------- */
+    main{
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 40px 20px;
+    }
+    h2 {
+        font-family: var(--font-heading);
+        color: var(--color-secondary);
+        text-align: center;
+        margin-bottom: 30px;
+    }
+    .category-header{
+      grid-column:1/-1;text-align:left;color:var(--color-primary);font-family:var(--font-heading);
+      margin-top:40px;font-size:1.8em;padding:10px 0;border-bottom:2px solid var(--color-accent);
+    }
+    .menu-grid{
+      display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px;padding:20px 0;
+    }
+    .menu-item{
+      background-color:var(--color-accent);padding:20px;border-radius:10px;box-shadow:0 4px 15px rgba(0, 0, 0, 0.3);
+      display:flex;flex-direction:column;justify-content:space-between;
+    }
+    .item-header{
+      display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;
+    }
+    .item-header h3{
+      margin:0;font-size:1.3em;color:var(--color-secondary);
+    }
+    .item-header .price{
+      font-weight:700;font-size:1.3em;color:var(--color-primary);
+    }
+    .menu-item p{
+      font-size:0.9em;color:var(--color-light);margin-bottom:15px;flex-grow:1;
+    }
+    .menu-item button{
+      width:100%;
+    }
+
+    /* ------------------------------------- */
+    /* III. Slideshow Styles */
+    /* ------------------------------------- */
+    .slideshow-container {
+        max-width: 900px;
+        position: relative;
+        margin: 0 auto 50px;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 0 25px rgba(138, 43, 226, 0.5); /* Primary color glow */
+    }
+    .mySlides {
+        display: none;
+        padding: 40px;
+        text-align: center;
+        background: linear-gradient(135deg, #1A1A36, #0A0A1F); 
+    }
+    .slide-heading {
+        font-family: var(--font-heading);
+        color: var(--color-secondary);
+        font-size: 2.5rem;
+        margin-bottom: 10px;
+    }
+    .slide-price {
+        font-size: 1.8rem;
+        color: var(--color-primary);
+        font-weight: bold;
+        display: block;
+        margin-bottom: 20px;
+    }
+    .slide-text {
+        font-size: 1.1rem;
+        color: var(--color-light);
+        margin-bottom: 30px;
+    }
+    .prev, .next {
+        cursor: pointer;
+        position: absolute;
+        top: 50%;
+        width: auto;
+        margin-top: -22px;
+        padding: 16px;
+        color: var(--color-light);
+        font-weight: bold;
+        font-size: 18px;
+        transition: 0.6s ease;
+        user-select: none;
+        background-color: rgba(0,0,0,0.5);
+        z-index: 10;
+    }
+    .next { right: 0; border-radius: 3px 0 0 3px; }
+    .prev { left: 0; border-radius: 0 3px 3px 0; }
+    .dot-container { text-align: center; padding: 10px 0; }
+    .dot {
+        cursor: pointer; height: 12px; width: 12px; margin: 0 4px;
+        background-color: #bbb; border-radius: 50%; display: inline-block;
+        transition: background-color 0.6s ease;
+    }
+    .active-dot, .dot:hover { background-color: var(--color-primary); }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <a href="index.html" class="logo">
+        <i data-lucide="moon" style="width: 24px; height: 24px;"></i>
+        LUNAR VEIL CAFE ☕
+    </a>
+    <nav class="nav">
+      <a href="index.html">Home</a>
+      <a href="menu.html">Menu</a>
+      <a href="transactions.html">Wallet</a>
+      <a href="tracking.html">Tracking</a>
+      <a href="cart.html">Cart (<span id="cart-count">0</span>)</a>
+    </nav>
+  </header>
+
+  <main>
+    <h2>OUR CELESTIAL MENU</h2>
+    
+    <h3 class="category-header" style="text-align: center;">🌟 Featured Specials</h3>
+    <div class="slideshow-container">
+        <div class="mySlides fade" data-id="501" data-name="Cosmic Comet Frappe" data-price="7.95">
+            <h3 class="slide-heading">Cosmic Comet Frappe</h3>
+            <span class="slide-price">$7.95</span>
+            <p class="slide-text">Our most popular blend: a swirling mix of vanilla ice cream, espresso, and galaxy dust sprinkles.</p>
+            <button class="btn btn-primary add-to-cart-btn"><i data-lucide="shopping-cart" style="width: 18px; height: 18px;"></i> Grab This Special</button>
+        </div>
+
+        <div class="mySlides fade" data-id="502" data-name="Starlight Sundae" data-price="8.50">
+            <h3 class="slide-heading">Starlight Sundae</h3>
+            <span class="slide-price">$8.50</span>
+            <p class="slide-text">Vanilla ice cream with molten caramel and a sprinkle of 'moon rock' brittle.</p>
+            <button class="btn btn-primary add-to-cart-btn"><i data-lucide="shopping-cart" style="width: 18px; height: 18px;"></i> Grab This Special</button>
+        </div>
+        
+        <div class="mySlides fade" data-id="503" data-name="Supernova Espresso" data-price="4.00">
+            <h3 class="slide-heading">Supernova Espresso</h3>
+            <span class="slide-price">$4.00</span>
+            <p class="slide-text">A single shot of our ultra-dark, high-caffeine reserve roast. Ignite your day.</p>
+            <button class="btn btn-primary add-to-cart-btn"><i data-lucide="shopping-cart" style="width: 18px; height: 18px;"></i> Grab This Special</button>
+        </div>
+
+        <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+        <a class="next" onclick="plusSlides(1)">&#10095;</a>
+    </div>
+
+    <div class="dot-container">
+      <span class="dot" onclick="currentSlide(1)"></span>
+      <span class="dot" onclick="currentSlide(2)"></span>
+      <span class="dot" onclick="currentSlide(3)"></span>
+    </div>
+    
+    <div class="menu-grid">
+        
+        <h3 class="category-header">🥛 Lattes</h3>
+        
+        <div class="menu-item" data-id="101" data-name="Stardust Latte" data-price="6.25">
+            <div class="item-header"><h3>Stardust Latte</h3><span class="price">$6.25</span></div>
+            <p>Velvety milk infused with a shimmer of edible gold dust, blended with our smooth espresso.</p>
+            <button class="btn btn-primary add-to-cart-btn"><i data-lucide="shopping-cart" style="width: 18px; height: 18px;"></i> Add to Cart</button>
+        </div>
+        
+        <div class="menu-item" data-id="102" data-name="Nebula Latte" data-price="6.50">
+            <div class="item-header"><h3>Nebula Latte</h3><span class="price">$6.50</span></div>
+            <p>Lavender-vanilla latte, layered with espresso and milk for a colorful nebula effect.</p>
+            <button class="btn btn-primary add-to-cart-btn"><i data-lucide="shopping-cart" style="width: 18px; height: 18px;"></i> Add to Cart</button>
+        </div>
+
+        <div class="menu-item" data-id="103" data-name="Comet Caramel Latte" data-price="6.75">
+            <div class="item-header"><h3>Comet Caramel Latte</h3><span class="price">$6.75</span></div>
+            <p>A classic, sweet caramel latte topped with a swirl of rich, molten sauce.</p>
+            <button class="btn btn-primary add-to-cart-btn"><i data-lucide="shopping-cart" style="width: 18px; height: 18px;"></i> Add to Cart</button>
+        </div>
+
+        <div class="menu-item" data-id="104" data-name="Aurora Vanilla Latte" data-price="5.95">
+            <div class="item-header"><h3>Aurora Vanilla Latte</h3><span class="price">$5.95</span></div>
+            <p>Simple and creamy vanilla syrup blended perfectly with espresso and steamed milk.</p>
+            <button class="btn btn-primary add-to-cart-btn"><i data-lucide="shopping-cart" style="width: 18px; height: 18px;"></i> Add to Cart</button>
+        </div>
+
+        <div class="menu-item" data-id="105" data-name="Galaxy Chai Latte" data-price="5.50">
+            <div class="item-header"><h3>Galaxy Chai Latte</h3><span class="price">$5.50</span></div>
+            <p>Spiced black tea concentrate, steamed milk, and a shot of vanilla for a smooth drink.</p>
+            <button class="btn btn-primary add-to-cart-btn"><i data-lucide="shopping-cart" style="width: 18px; height: 18px;"></i> Add to Cart</button>
+        </div>
+
+        <div class="menu-item" data-id="106" data-name="Solar Maple Latte" data-price="6.25">
+            <div class="item-header"><h3>Solar Maple Latte</h3><span class="price">$6.25</span></div>
+            <p>Espresso infused with pure maple syrup and a sprinkle of cinnamon sugar.</p>
+            <button class="btn btn-primary add-to-cart-btn"><i data-lucide="shopping-cart" style="width: 18px; height: 18px;"></i> Add to Cart</button>
+        </div>
+
+        <div class="menu-item" data-id="107" data-name="Lunar White Mocha" data-price="7.00">
+            <div class="item-header"><h3>Lunar White Mocha</h3><span class="price">$7.00</span></div>
+            <p>Rich white chocolate, espresso, and steamed milk, a decadent classic.</p>
+            <button class="btn btn-primary add-to-cart-btn"><i data-lucide="shopping-cart" style="width: 18px; height: 18px;"></i> Add to Cart</button>
+        </div>
+        
+        <div class="menu-item" data-id="108" data-name="Celestial Honey Latte" data-price="6.50">
+            <div class="item-header"><h3>Celestial Honey Latte</h3><span class="price">$6.50</span></div>
+            <p>Lightly sweetened latte infused with pure honey and a dash of cinnamon.</p>
+            <button class="btn btn-primary add-to-cart-btn"><i data-lucide="shopping-cart" style="width: 18px; height: 18px;"></i> Add to Cart</button>
+        </div>
+
+        <div class="menu-item" data-id="109" data-name="Andromeda Amaretto Latte" data-price="7.10">
+            <div class="item-header"><h3>Andromeda Amaretto Latte</h3><span class="price">$7.10</span></div>
+            <p>A sophisticated blend of almond and cherry liqueur flavors in a smooth latte.</p>
+            <button class="btn btn-primary add-to-cart-btn"><i data-lucide="shopping-cart" style="width: 18px; height: 18px;"></i> Add to Cart</button>
+        </div>
+
+        <div class="menu-item" data-id="110" data-name="Zero-G Gingerbread Latte" data-price="6.85">
+            <div class="item-header"><h3>Zero-G Gingerbread Latte</h3><span class="price">$6.85</span></div>
+            <p>A spicy and sweet latte with classic gingerbread notes, perfect for any season.</p>
+            <button class="btn btn-primary add-to-cart-btn"><i data-lucide="shopping-cart" style="width: 18px; height: 18px;"></i> Add to Cart</button>
+        </div>
+
+
+        <h3 class="category-header">🍧 Frappes</h3>
+        
+        <div class="menu-item" data-id="201" data-name="Milky Way Mocha Frappe" data-price="7.25">
+            <div class="item-header"><h3>Milky Way Mocha Frappe</h3><span class="price">$7.25</span></div>
+            <p>Frozen chocolate and espresso blended with a hint of caramel, topped with whipped cream.</p>
+            <button class="btn btn-primary add-to-cart-btn"><i data-lucide="shopping-cart" style="width: 18px; height: 18px;"></i> Add to Cart</button>
+        </div>
+        
+        <div class="menu-item" data-id="202" data-name="Mars Mocha Frappe" data-price="6.95">
+            <div class="item-header"><h3>Mars Mocha Frappe</h3><span class="price">$6.95</span></div>
+            <p>Chili-infused chocolate and coffee blended to a cold perfection for a fiery kick.</p>
+            <button class="btn btn-primary add-to-cart-btn"><i data-lucide="shopping-cart" style="width: 18px; height: 18px;"></i> Add to Cart</button>
+        </div>
+
+        <div class="menu-item" data-id="203" data-name="Saturn Spiced Frappe" data-price="7.50">
+            <div class="item-header"><h3>Saturn Spiced Frappe</h3><span class="price">$7.50</span></div>
+            <p>Pumpkin spice blended with cold brew, creamy, and topped with nutmeg.</p>
+            <button class="btn btn-primary add-to-cart-btn"><i data-lucide="shopping-cart" style="width: 18px; height: 18px;"></i> Add to Cart</button>
+        </div>
+        
+        <div class="menu-item" data-id="204" data-name="Jupiter Berry Frappe" data-price="7.95">
+            <div class="item-header"><h3>Jupiter Berry Frappe</h3><span class="price">$7.95</span></div>
+            <p>A non-coffee option: mixed berries and yogurt blended to a refreshing icy drink.</p>
+            <button class="btn btn-primary add-to-cart-btn"><i data-lucide="shopping-cart" style="width: 18px; height: 18px;"></i> Add to Cart</button>
+        </div>
+
+        <div class="menu-item" data-id="205" data-name="Meteor Mint Frappe" data-price="6.80">
+            <div class="item-header"><h3>Meteor Mint Frappe</h3><span class="price">$6.80</span></div>
+            <p>Espresso blended with mint syrup and chocolate chips.</p>
+            <button class="btn btn-primary add-to-cart-btn"><i data-lucide="shopping-cart" style="width: 18px; height: 18px;"></i> Add to Cart</button>
+        </div>
+
+        <div class="menu-item" data-id="206" data-name="Deep Space Frappe" data-price="7.45">
+            <div class="item-header"><h3>Deep Space Frappe</h3><span class="price">$7.45</span></div>
+            <p>Double chocolate blend with extra dark espresso for a rich flavor.</p>
+            <button class="btn btn-primary add-to-cart-btn"><i data-lucide="shopping-cart" style="width: 18px; height: 18px;"></i> Add to Cart</button>
+        </div>
+
+        <div class="menu-item" data-id="207" data-name="Gravity Coffee Jelly Frappe" data-price="7.10">
+            <div class="item-header"><h3>Gravity Coffee Jelly Frappe</h3><span class="price">$7.10</span></div>
+            <p>A sweet coffee-blended drink with chewy coffee-flavored jelly pieces.</p>
+            <button class="btn btn-primary add-to-cart-btn"><i data-lucide="shopping-cart" style="width: 18px; height: 18px;"></i> Add to Cart</button>
+        </div>
+        
+        <div class="menu-item" data-id="208" data-name="Nova Nutella Frappe" data-price="7.80">
+            <div class="item-header"><h3>Nova Nutella Frappe</h3><span class="price">$7.80</span></div>
+            <p>Creamy, frozen coffee blended with genuine hazelnut spread.</p>
+            <button class="btn btn-primary add-to-cart-btn"><i data-lucide="shopping-cart" style="width: 18px; height: 18px;"></i> Add to Cart</button>
+        </div>
+
+        <div class="menu-item" data-id="209" data-name="Eclipse Espresso Chip Frappe" data-price="7.65">
+            <div class="item-header"><h3>Eclipse Espresso Chip Frappe</h3><span class="price">$7.65</span></div>
+            <p>Extra potent espresso blended with crunchy mini chocolate chips.</p>
+            <button class="btn btn-primary add-to-cart-btn"><i data-lucide="shopping-cart" style="width: 18px; height: 18px;"></i> Add to Cart</button>
+        </div>
+
+        <div class="menu-item" data-id="210" data-name="Vesta Velvet Red Frappe" data-price="7.55">
+            <div class="item-header"><h3>Vesta Velvet Red Frappe</h3><span class="price">$7.55</span></div>
+            <p>Frozen mix of red velvet cake flavor and cream cheese swirl.</p>
+            <button class="btn btn-primary add-to-cart-btn"><i data-lucide="shopping-cart" style="width: 18px; height: 18px;"></i> Add to Cart</button>
+        </div>
+
+
+        <h3 class="category-header">🥐 Pastries</h3>
+
+        <div class="menu-item" data-id="301" data-name="Moon Rock Muffin" data-price="3.50">
+            <div class="item-header"><h3>Moon Rock Muffin</h3><span class="price">$3.50</span></div>
+            <p>Blueberry muffin baked with a caramelized sugar crust.</p>
+            <button class="btn btn-primary add-to-cart-btn"><i data-lucide="shopping-cart" style="width: 18px; height: 18px;"></i> Add to Cart</button>
+        </div>
+        
+        <div class="menu-item" data-id="302" data-name="Galactic Glaze Donut" data-price="2.75">
+            <div class="item-header"><h3>Galactic Glaze Donut</h3><span class="price">$2.75</span></div>
+            <p>Fluffy yeast donut covered in a swirling purple and blue glaze.</p>
+            <button class="btn btn-primary add-to-cart-btn"><i data-lucide="shopping-cart" style="width: 18px; height: 18px;"></i> Add to Cart</button>
+        </div>
+        
+        <div class="menu-item" data-id="303" data-name="Nova Croissant" data-price="4.25">
+            <div class="item-header"><h3>Nova Croissant</h3><span class="price">$4.25</span></div>
+            <p>Buttery, flaky classic French croissant, baked fresh daily.</p>
+            <button class="btn btn-primary add-to-cart-btn"><i data-lucide="shopping-cart" style="width: 18px; height: 18px;"></i> Add to Cart</button>
+        </div>
+
+        <div class="menu-item" data-id="304" data-name="Asteroid Almond Croissant" data-price="3.95">
+            <div class="item-header"><h3>Asteroid Almond Croissant</h3><span class="price">$3.95</span></div>
+            <p>Flaky croissant filled with sweet almond paste and sliced almonds.</p>
+            <button class="btn btn-primary add-to-cart-btn"><i data-lucide="shopping-cart" style="width: 18px; height: 18px;"></i> Add to Cart</button>
+        </div>
+
+        <div class="menu-item" data-id="305" data-name="Black Hole Brownie" data-price="3.25">
+            <div class="item-header"><h3>Black Hole Brownie</h3><span class="price">$3.25</span></div>
+            <p>An intense, fudgy, dark chocolate brownie with a molten center.</p>
+            <button class="btn btn-primary add-to-cart-btn"><i data-lucide="shopping-cart" style="width: 18px; height: 18px;"></i> Add to Cart</button>
+        </div>
+
+        <div class="menu-item" data-id="306" data-name="Venus Velvet Cake Slice" data-price="4.50">
+            <div class="item-header"><h3>Venus Velvet Cake Slice</h3><span class="price">$4.50</span></div>
+            <p>A slice of red velvet cake topped with cream cheese frosting.</p>
+            <button class="btn btn-primary add-to-cart-btn"><i data-lucide="shopping-cart" style="width: 18px; height: 18px;"></i> Add to Cart</button>
+        </div>
+
+        <div class="menu-item" data-id="307" data-name="Starship Scone" data-price="3.75">
+            <div class="item-header"><h3>Starship Scone</h3><span class="price">$3.75</span></div>
+            <p>A buttery blueberry scone, lightly glazed, perfect for dipping in coffee.</p>
+            <button class="btn btn-primary add-to-cart-btn"><i data-lucide="shopping-cart" style="width: 18px; height: 18px;"></i> Add to Cart</button>
+        </div>
+        
+        <div class="menu-item" data-id="308" data-name="Planetary Pecan Bar" data-price="4.75">
+            <div class="item-header"><h3>Planetary Pecan Bar</h3><span class="price">$4.75</span></div>
+            <p>A rich, buttery bar topped with crunchy, caramelized pecans.</p>
+            <button class="btn btn-primary add-to-cart-btn"><i data-lucide="shopping-cart" style="width: 18px; height: 18px;"></i> Add to Cart</button>
+        </div>
+
+        <div class="menu-item" data-id="309" data-name="Supermoon Sugar Cookie" data-price="2.25">
+            <div class="item-header"><h3>Supermoon Sugar Cookie</h3><span class="price">$2.25</span></div>
+            <p>A large, soft-baked sugar cookie finished with shimmering edible glitter glaze.</p>
+            <button class="btn btn-primary add-to-cart-btn"><i data-lucide="shopping-cart" style="width: 18px; height: 18px;"></i> Add to Cart</button>
+        </div>
+
+        <div class="menu-item" data-id="310" data-name="Black Forest Gateau (Slice)" data-price="5.50">
+            <div class="item-header"><h3>Black Forest Gateau (Slice)</h3><span class="price">$5.50</span></div>
+            <p>A slice of decadent chocolate sponge cake with cream and cherries.</p>
+            <button class="btn btn-primary add-to-cart-btn"><i data-lucide="shopping-cart" style="width: 18px; height: 18px;"></i> Add to Cart</button>
+        </div>
+        
+        
+        <h3 class="category-header">⭐ Other Brews & Drinks</h3>
+        
+        <div class="menu-item" data-id="401" data-name="Black Hole Cold Brew" data-price="4.95">
+            <div class="item-header"><h3>Black Hole Cold Brew</h3><span class="price">$4.95</span></div>
+            <p>24-hour steeped cold brew, dark, smooth, and immensely strong.</p>
+            <button class="btn btn-primary add-to-cart-btn"><i data-lucide="shopping-cart" style="width: 18px; height: 18px;"></i> Add to Cart</button>
+        </div>
+        
+        <div class="menu-item" data-id="402" data-name="Jupiter Berry Blast" data-price="7.00">
+            <div class="item-header"><h3>Jupiter Berry Blast (Smoothie)</h3><span class="price">$7.00</span></div>
+            <p>A thick blend of strawberries, blueberries, banana, and lunar honey.</p>
+            <button class="btn btn-primary add-to-cart-btn"><i data-lucide="shopping-cart" style="width: 18px; height: 18px;"></i> Add to Cart</button>
+        </div>
+
+        <div class="menu-item" data-id="403" data-name="Plasma Peach Iced Tea" data-price="3.95">
+            <div class="item-header"><h3>Plasma Peach Iced Tea</h3><span class="price">$3.95</span></div>
+            <p>Freshly brewed black tea sweetened with natural peach nectar and served over ice.</p>
+            <button class="btn btn-primary add-to-cart-btn"><i data-lucide="shopping-cart" style="width: 18px; height: 18px;"></i> Add to Cart</button>
+        </div>
+
+        <div class="menu-item" data-id="404" data-name="Mercury Mango Green Tea" data-price="4.50">
+            <div class="item-header"><h3>Mercury Mango Green Tea</h3><span class="price">$4.50</span></div>
+            <p>Light green tea infused with sweet mango chunks, a refreshing lift.</p>
+            <button class="btn btn-primary add-to-cart-btn"><i data-lucide="shopping-cart" style="width: 18px; height: 18px;"></i> Add to Cart</button>
+        </div>
+
+        <div class="menu-item" data-id="405" data-name="Titan Triple Shot Americano" data-price="4.25">
+            <div class="item-header"><h3>Titan Triple Shot Americano</h3><span class="price">$4.25</span></div>
+            <p>Three shots of espresso watered down for a strong, pure coffee.</p>
+            <button class="btn btn-primary add-to-cart-btn"><i data-lucide="shopping-cart" style="width: 18px; height: 18px;"></i> Add to Cart</button>
+        </div>
+
+        <div class="menu-item" data-id="406" data-name="Neptune Nectar Juice" data-price="6.00">
+            <div class="item-header"><h3>Neptune Nectar Juice</h3><span class="price">$6.00</span></div>
+            <p>Fresh-squeezed blend of orange, carrot, and ginger for a healthy blast.</p>
+            <button class="btn btn-primary add-to-cart-btn"><i data-lucide="shopping-cart" style="width: 18px; height: 18px;"></i> Add to Cart</button>
+        </div>
+
+        <div class="menu-item" data-id="407" data-name="Zenith Zest Sparkling Water" data-price="2.50">
+            <div class="item-header"><h3>Zenith Zest Sparkling Water</h3><span class="price">$2.50</span></div>
+            <p>Plain sparkling mineral water with a slice of lime and lemon.</p>
+            <button class="btn btn-primary add-to-cart-btn"><i data-lucide="shopping-cart" style="width: 18px; height: 18px;"></i> Add to Cart</button>
+        </div>
+        
+        <div class="menu-item" data-id="408" data-name="Cosmos Coconut Water" data-price="3.00">
+            <div class="item-header"><h3>Cosmos Coconut Water</h3><span class="price">$3.00</span></div>
+            <p>Chilled, natural coconut water, a pure hydrating beverage.</p>
+            <button class="btn btn-primary add-to-cart-btn"><i data-lucide="shopping-cart" style="width: 18px; height: 18px;"></i> Add to Cart</button>
+        </div>
+        
+        <div class="menu-item" data-id="409" data-name="Hyperspace Hot Chocolate" data-price="5.25">
+            <div class="item-header"><h3>Hyperspace Hot Chocolate</h3><span class="price">$5.25</span></div>
+            <p>Ultra-rich, creamy dark hot chocolate, perfect for a cozy evening.</p>
+            <button class="btn btn-primary add-to-cart-btn"><i data-lucide="shopping-cart" style="width: 18px; height: 18px;"></i> Add to Cart</button>
+        </div>
+
+        <div class="menu-item" data-id="410" data-name="Interstellar Sparkling Cider" data-price="5.95">
+            <div class="item-header"><h3>Interstellar Sparkling Cider</h3><span class="price">$5.95</span></div>
+            <p>A tart, refreshing bubbly cider made from fresh, crisp apples.</p>
+            <button class="btn btn-primary add-to-cart-btn"><i data-lucide="shopping-cart" style="width: 18px; height: 18px;"></i> Add to Cart</button>
+        </div>
+
+    </div>
+  </main>
+
+<script>
+    // --- CRITICAL FIX: Ensure consistent Local Storage Key for Cart Sync ---
+    // This key MUST match the key used in checkout.html: 'cafeCart'
+    const CART_STORAGE_KEY = 'cafeCart'; 
+    let cart = JSON.parse(localStorage.getItem(CART_STORAGE_KEY)) || []; 
+
+    let slideIndex = 1;
+    let slideshowTimeout;
+
+    // --- SLIDESHOW LOGIC ---
+    function showSlides(n) {
+        let i;
+        let slides = document.getElementsByClassName("mySlides");
+        let dots = document.getElementsByClassName("dot");
+        
+        clearTimeout(slideshowTimeout);
+        if (slides.length === 0) return;
+        
+        if (n > slides.length) {slideIndex = 1}    
+        if (n < 1) {slideIndex = slides.length}
+        
+        for (i = 0; i < slides.length; i++) {
+            slides[i].style.display = "none";  
+        }
+        for (i = 0; i < dots.length; i++) {
+            dots[i].className = dots[i].className.replace(" active-dot", "");
+        }
+        
+        slides[slideIndex-1].style.display = "block"; 
+        dots[slideIndex-1].className += " active-dot";
+        
+        // Auto-advance slides every 4 seconds
+        slideshowTimeout = setTimeout(autoSlide, 4000); 
+    }
+
+    function plusSlides(n) {
+      showSlides(slideIndex += n);
+    }
+
+    function currentSlide(n) {
+      showSlides(slideIndex = n);
+    }
+
+    function autoSlide() {
+        plusSlides(1);
+    }
+
+    // --- CART LOGIC (Preserved from last working version) ---
+    
+    function addCartListeners() {
+        // Targets both grid and slideshow buttons
+        document.querySelectorAll('.add-to-cart-btn').forEach(button => {
+            // Re-attach listeners safely by cloning and replacing (removes old listeners)
+            const newButton = button.cloneNode(true);
+            button.parentNode.replaceChild(newButton, button);
+        });
+
+        document.querySelectorAll('.add-to-cart-btn').forEach(button => {
+            button.addEventListener('click', (e) => {
+                // Find the nearest parent with item data (either .menu-item or .mySlides)
+                const itemContainer = e.currentTarget.closest('.menu-item') || e.currentTarget.closest('.mySlides');
+                
+                if (!itemContainer) return;
+                
+                // Get data from the parent container
+                const id = itemContainer.getAttribute('data-id'); 
+                const name = itemContainer.getAttribute('data-name');
+                const price = parseFloat(itemContainer.getAttribute('data-price'));
+                
+                addToCart({ id, name, price }); 
+                
+                // Visual feedback
+                const originalContent = e.currentTarget.innerHTML;
+                e.currentTarget.innerHTML = '<i data-lucide="check" style="width: 18px; height: 18px;"></i> Added!';
+                lucide.createIcons();
+                setTimeout(() => {
+                    e.currentTarget.innerHTML = originalContent;
+                    lucide.createIcons(); // Re-render icon in button
+                }, 500);
+            });
+        });
+    }
+
+    function addToCart(product) {
+        const existingItem = cart.find(item => item.id === product.id); 
+
+        if (existingItem) {
+            existingItem.quantity += 1;
+        } else {
+            cart.push({ id: product.id, name: product.name, price: product.price, quantity: 1 });
+        }
+
+        localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart));
+        renderCartCount();
+        // Removed the alert() for a smoother user experience
+    }
+    
+    function renderCartCount() {
+        const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
+        const cartCountSpan = document.getElementById('cart-count');
+        
+        if (cartCountSpan) {
+            cartCountSpan.textContent = totalItems;
+        }
+    }
+
+    // --- INITIALIZATION ---
+    document.addEventListener('DOMContentLoaded', () => {
+        renderCartCount(); 
+        addCartListeners();
+        showSlides(slideIndex); // Initialize slideshow
+        lucide.createIcons();
+    });
+</script>
+
+</body>
+</html>

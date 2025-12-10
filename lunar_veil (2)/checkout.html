@@ -1,0 +1,494 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Lunar Veil Cafe ☕ — Checkout</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script> 
+
+  <style>
+    /* ------------------------------------- */
+    /* I. Global & Header Styles */
+    /* ------------------------------------- */
+    :root{
+      --color-dark: #0A0A1F;
+      --color-primary: #8A2BE2; /* Amethyst */
+      --color-secondary: #FFD700; /* Gold */
+      --color-accent: #2c254b; /* Deep Purple Background Accent */
+      --color-light: #E0E0E0; /* Off-White */
+      --color-error: #FF6347; /* Tomato */
+      --color-success: #32CD32; /* Green for success */
+      --font-heading: 'Cinzel', serif;
+      --font-body: 'Inter', sans-serif;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;min-height:100vh;font-family:var(--font-body);background-color:var(--color-dark);color:var(--color-light);
+      background-image: radial-gradient(var(--color-accent) 1px, transparent 0), radial-gradient(var(--color-accent) 1px, transparent 0);
+      background-size:80px 80px;background-position:0 0,40px 40px;
+    }
+    a{color:var(--color-secondary);text-decoration:none}
+    a:hover{text-decoration:underline}
+    .header{
+        background-color: var(--color-accent);
+        padding: 15px 30px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    }
+    .nav a {
+        color: var(--color-light);
+        margin-left: 20px;
+        font-weight: 600;
+        transition: color 0.3s;
+    }
+    .nav a:hover {
+        color: var(--color-secondary);
+        text-decoration: none;
+    }
+    .logo{
+        font-family: var(--font-heading);
+        font-size: 1.5rem;
+        color: var(--color-primary);
+        display: flex;
+        align-items: center;
+    }
+    .logo i {
+        margin-right: 8px;
+    }
+    .btn {
+        padding: 8px 15px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: background-color 0.3s;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .btn.primary {
+        background-color: var(--color-primary);
+        color: var(--color-light);
+    }
+    .btn.primary:hover {
+        background-color: #9b47e5;
+    }
+    .container {
+        max-width: 900px;
+        margin: 40px auto;
+        padding: 0 20px;
+    }
+    .page-title {
+        font-family: var(--font-heading);
+        color: var(--color-secondary);
+        text-align: center;
+        margin-bottom: 40px;
+    }
+    .grid {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 30px;
+    }
+    .checkout-section {
+        background-color: var(--color-accent);
+        padding: 25px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+    .checkout-section h2 {
+        font-family: var(--font-heading);
+        color: var(--color-primary);
+        border-bottom: 1px solid #444;
+        padding-bottom: 10px;
+        margin-top: 0;
+        margin-bottom: 20px;
+    }
+    /* Order Summary */
+    .summary-item {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+    }
+    .summary-total {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-top: 20px;
+        padding-top: 15px;
+        border-top: 1px dashed #666;
+        color: var(--color-success);
+    }
+    /* Details Form */
+    .form-group {
+        margin-bottom: 20px;
+    }
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: var(--color-secondary);
+    }
+    .form-group input, .form-group select {
+        width: 100%;
+        padding: 10px;
+        border-radius: 5px;
+        border: 1px solid var(--color-primary);
+        background-color: var(--color-dark);
+        color: var(--color-light);
+        font-family: var(--font-body);
+    }
+    .form-group input:focus, .form-group select:focus {
+        outline: none;
+        border-color: var(--color-secondary);
+        box-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
+    }
+    .radio-group {
+        display: flex;
+        gap: 20px;
+    }
+    .radio-group label {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        cursor: pointer;
+    }
+    .radio-group input[type="radio"] {
+        width: 16px;
+        height: 16px;
+        accent-color: var(--color-primary);
+    }
+    /* Checkout button */
+    .submit-btn {
+        width: 100%;
+        margin-top: 20px;
+        font-size: 1.2rem;
+        padding: 15px;
+    }
+    /* Message area */
+    #messageArea {
+        padding: 15px;
+        margin-bottom: 20px;
+        border-radius: 5px;
+        font-weight: 600;
+        text-align: center;
+    }
+    .message.success {
+        background-color: var(--color-success);
+        color: var(--color-dark);
+    }
+    .message.error {
+        background-color: var(--color-error);
+        color: var(--color-dark);
+    }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <a href="index.html" class="logo">
+        <i data-lucide="moon" style="width: 24px; height: 24px;"></i>
+        LUNAR VEIL CAFE ☕
+    </a>
+    <nav class="nav">
+        <a href="index.html">Home</a>
+        <a href="menu.html">Menu</a>
+        <a href="transactions.html">Wallet</a>
+        <a href="tracking.html">Tracking</a> <a href="cart.html">Cart (<span id="cart-count">0</span>)</a>
+    </nav>
+    <div style="color: var(--color-light); font-weight: 600;">
+        <span id="welcome-user">Welcome, Guest!</span> | 
+        <span id="wallet-balance-header">Balance: $0.00</span> |
+        <button id="logout-btn" class="btn primary" style="padding: 5px 10px;">
+            <i data-lucide="log-out" style="width: 18px; height: 18px;"></i> Logout
+        </button>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+        <h1 class="page-title">Finalize Your Order</h1>
+        
+        <div id="messageArea"></div>
+
+        <form id="checkoutForm">
+            <div class="grid">
+                
+                <div class="checkout-section">
+                    <h2>Shipping Details</h2>
+                    
+                    <div class="form-group">
+                        <label>Order Type</label>
+                        <div class="radio-group">
+                            <label><input type="radio" name="order_type" value="Pickup" checked> Pickup</label>
+                            <label><input type="radio" name="order_type" value="Delivery"> Delivery</label>
+                        </div>
+                    </div>
+
+                    <div id="deliveryFields" class="form-group" style="display: none;">
+                        <label for="address">Delivery Address</label>
+                        <input type="text" id="address" required placeholder="Enter full address">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="notes">Special Notes (Optional)</label>
+                        <input type="text" id="notes" placeholder="e.g., extra napkins, sugar-free">
+                    </div>
+                </div>
+
+                <div class="checkout-section">
+                    <h2>Order Summary</h2>
+                    
+                    <div id="item-list">
+                        </div>
+                    
+                    <div class="summary-item">
+                        <span>Subtotal:</span>
+                        <span id="summary-subtotal">$0.00</span>
+                    </div>
+                    <div class="summary-item">
+                        <span>Tax (5%):</span>
+                        <span id="summary-tax">$0.00</span>
+                    </div>
+                    <div class="summary-item">
+                        <span>Delivery Fee:</span>
+                        <span id="summary-delivery-fee">$0.00</span>
+                    </div>
+                    <div class="summary-item summary-total">
+                        <span>Wallet Balance:</span>
+                        <span id="summary-wallet-balance">$0.00</span>
+                    </div>
+                    <div class="summary-item summary-total" style="color: var(--color-error); display: none;" id="warning-low-balance">
+                        <span><i data-lucide="alert-triangle"></i> Insufficient Funds!</span>
+                        <span></span>
+                    </div>
+                    <div class="summary-item summary-total" style="border-top: 1px solid var(--color-primary);">
+                        <span>Total Due:</span>
+                        <span id="summary-grand-total">$0.00</span>
+                    </div>
+                    
+                    <button type="submit" id="placeOrderBtn" class="btn primary submit-btn">
+                        <i data-lucide="pocket" style="width: 20px; height: 20px;"></i> Place Order & Pay with Wallet
+                    </button>
+                </div>
+
+            </div>
+        </form>
+    </div>
+  </main>
+
+<script>
+    let cart = JSON.parse(localStorage.getItem('cafeCart') || '[]');
+    let isLoggedIn = false;
+    let walletBalance = 0.00;
+    const TAX_RATE = 0.05;
+    const DELIVERY_FEE = 3.00;
+    const messageArea = document.getElementById('messageArea');
+
+    // =============================================
+    // I. AUTHENTICATION & UI HELPERS
+    // =============================================
+
+    function renderCartCount() {
+        const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
+        document.getElementById('cart-count').textContent = totalItems;
+    }
+    
+    async function loadWalletBalance() {
+        if (!isLoggedIn) return;
+        try {
+            const response = await fetch('wallet.php', {
+                method: 'POST', body: JSON.stringify({ action: 'get_balance' }),
+                headers: { 'Content-Type': 'application/json' }
+            });
+            const data = await response.json();
+            if (data.success) {
+                walletBalance = parseFloat(data.balance);
+                const balanceDisplay = walletBalance.toFixed(2);
+                document.getElementById('wallet-balance-header').textContent = `Balance: $${balanceDisplay}`;
+                document.getElementById('summary-wallet-balance').textContent = `$${balanceDisplay}`;
+                calculateTotal(); 
+            }
+        } catch (error) { console.error('Error fetching balance:', error); }
+    }
+
+    async function checkLoginStatus() {
+        const welcomeUserSpan = document.getElementById('welcome-user');
+        if (cart.length === 0) {
+            alert("Your cart is empty. Please add items from the menu before checking out.");
+            window.location.href = 'menu.html';
+            return;
+        }
+        
+        try {
+            const response = await fetch('auth.php', {
+                method: 'POST', body: JSON.stringify({ action: 'status' }),
+                headers: { 'Content-Type': 'application/json' }
+            });
+            const data = await response.json();
+            
+            if (!data.isLoggedIn) {
+                window.location.href = 'login.html';
+            } else {
+                isLoggedIn = true;
+                welcomeUserSpan.textContent = `Welcome, ${data.username}!`;
+                loadWalletBalance();
+                renderCartCount();
+                renderCartItemsSummary();
+                lucide.createIcons();
+            }
+        } catch (error) {
+            console.error('Error checking login status:', error);
+            welcomeUserSpan.textContent = 'Connection Error';
+        }
+    }
+    
+    document.getElementById('logout-btn').addEventListener('click', async () => {
+        await fetch('auth.php', { method: 'POST', body: JSON.stringify({ action: 'logout' }), headers: { 'Content-Type': 'application/json' } });
+        window.location.href = 'login.html';
+    });
+
+    /**
+     * Displays a success or error message in the order message area.
+     */
+    function displayMessage(message, type) {
+        messageArea.innerHTML = `<div class="message ${type}">${message}</div>`;
+        setTimeout(() => {
+            messageArea.innerHTML = ''; 
+        }, 5000);
+    }
+    
+    // =============================================
+    // II. ORDER LOGIC & CALCULATIONS
+    // =============================================
+    
+    function renderCartItemsSummary() {
+        const container = document.getElementById('item-list');
+        container.innerHTML = '<h3>Items:</h3>' + cart.map(item => `
+            <div class="summary-item" style="font-size: 0.9em;">
+                <span style="font-weight: 400;">${item.quantity}x ${item.name}</span>
+                <span>$${(item.price * item.quantity).toFixed(2)}</span>
+            </div>
+        `).join('');
+        
+        calculateTotal();
+    }
+
+    function calculateTotal() {
+        const orderType = document.querySelector('input[name="order_type"]:checked').value;
+        const deliveryFee = orderType === 'Delivery' ? DELIVERY_FEE : 0.00;
+        
+        const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+        const tax = subtotal * TAX_RATE;
+        const grandTotal = subtotal + tax + deliveryFee;
+        
+        document.getElementById('summary-subtotal').textContent = `$${subtotal.toFixed(2)}`;
+        document.getElementById('summary-tax').textContent = `$${tax.toFixed(2)}`;
+        document.getElementById('summary-delivery-fee').textContent = `$${deliveryFee.toFixed(2)}`;
+        document.getElementById('summary-grand-total').textContent = `$${grandTotal.toFixed(2)}`;
+
+        // Check for sufficient funds
+        const warningBox = document.getElementById('warning-low-balance');
+        const placeOrderBtn = document.getElementById('placeOrderBtn');
+        
+        if (grandTotal > walletBalance) {
+            warningBox.style.display = 'flex';
+            placeOrderBtn.disabled = true;
+            placeOrderBtn.textContent = 'Insufficient Funds';
+            placeOrderBtn.style.backgroundColor = 'var(--color-error)';
+        } else {
+            warningBox.style.display = 'none';
+            placeOrderBtn.disabled = false;
+            placeOrderBtn.innerHTML = '<i data-lucide="pocket" style="width: 20px; height: 20px;"></i> Place Order & Pay with Wallet';
+            placeOrderBtn.style.backgroundColor = 'var(--color-primary)';
+            lucide.createIcons();
+        }
+        
+        return { grandTotal, orderType, deliveryFee, subtotal };
+    }
+
+    // Toggle delivery fields based on radio button
+    document.querySelectorAll('input[name="order_type"]').forEach(radio => {
+        radio.addEventListener('change', (e) => {
+            const deliveryFields = document.getElementById('deliveryFields');
+            if (e.target.value === 'Delivery') {
+                deliveryFields.style.display = 'block';
+                document.getElementById('address').setAttribute('required', 'required');
+            } else {
+                deliveryFields.style.display = 'none';
+                document.getElementById('address').removeAttribute('required');
+            }
+            calculateTotal(); 
+        });
+    });
+
+    // =============================================
+    // III. FORM SUBMISSION
+    // =============================================
+
+    document.getElementById('checkoutForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const { grandTotal, orderType, deliveryFee, subtotal } = calculateTotal();
+        const address = document.getElementById('address').value;
+        const notes = document.getElementById('notes').value;
+        const items = cart; 
+
+        if (grandTotal > walletBalance) {
+            displayMessage('Payment failed: Insufficient funds in your wallet.', 'error');
+            return;
+        }
+
+        if (orderType === 'Delivery' && address.trim() === '') {
+             displayMessage('Please enter a delivery address.', 'error');
+             return;
+        }
+        
+        const btn = document.getElementById('placeOrderBtn');
+        btn.disabled = true;
+        btn.innerHTML = '<i data-lucide="loader" class="animate-spin" style="width: 20px; height: 20px;"></i> Processing...';
+        lucide.createIcons();
+
+        try {
+            const response = await fetch('process_order.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    total_amount: grandTotal.toFixed(2),
+                    order_type: orderType,
+                    delivery_address: orderType === 'Delivery' ? address : null,
+                    special_notes: notes,
+                    cart_items: items 
+                })
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                // Clear cart and redirect
+                localStorage.removeItem('cafeCart');
+                alert(`Order #${data.order_id} placed successfully! $${grandTotal.toFixed(2)} deducted from your wallet.`);
+                window.location.href = 'tracking.html';
+            } else {
+                displayMessage(`Order Failed: ${data.message || 'Error processing payment.'}`, 'error');
+            }
+
+        } catch (error) {
+            console.error('Checkout error:', error);
+            displayMessage('A connection error occurred. Could not place order.', 'error');
+        } finally {
+            // Restore button state (only if redirection failed)
+            btn.disabled = false;
+            btn.innerHTML = '<i data-lucide="pocket" style="width: 20px; height: 20px;"></i> Place Order & Pay with Wallet';
+            lucide.createIcons();
+        }
+    });
+
+
+    // --- Initialization ---
+    document.addEventListener('DOMContentLoaded', checkLoginStatus);
+</script>
+
+</body>
+</html>

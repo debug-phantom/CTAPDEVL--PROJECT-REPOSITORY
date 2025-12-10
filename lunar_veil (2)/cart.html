@@ -1,0 +1,387 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Lunar Veil Cafe ☕ — Shopping Cart</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    /* Inherit base styles from index.html for consistency */
+    :root{
+      --color-dark: #0A0A1F;
+      --color-primary: #8A2BE2; 
+      --color-secondary: #FFD700; 
+      --color-accent: #2c254b; 
+      --color-light: #E0E0E0; 
+      --color-error: #FF6347; 
+      --font-heading: 'Cinzel', serif;
+      --font-body: 'Inter', sans-serif;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;min-height:100vh;font-family:var(--font-body);background-color:var(--color-dark);color:var(--color-light);
+      background-image: radial-gradient(var(--color-accent) 1px, transparent 0), radial-gradient(var(--color-accent) 1px, transparent 0);
+      background-size:80px 80px;background-position:0 0,40px 40px;
+    }
+    /* Header/Nav Styles */
+    .header{
+        background-color: var(--color-accent);
+        padding: 15px 30px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    }
+    .nav {
+        display: flex;
+        align-items: center;
+        flex-grow: 1; 
+        margin-left: 30px;
+    }
+    .nav a {
+        color: var(--color-light);
+        margin-right: 30px; 
+        font-weight: 600;
+        transition: color 0.3s;
+        text-decoration: none;
+        padding: 5px 0;
+    }
+    .nav a:hover {
+        color: var(--color-secondary);
+    }
+    .logo{
+        font-family: var(--font-heading);
+        font-size: 1.5rem;
+        color: var(--color-primary);
+        display: flex;
+        align-items: center;
+    }
+    .btn {
+        padding: 5px 10px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: background-color 0.3s;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        margin-left: 10px; 
+        text-decoration: none; /* For button-like links */
+    }
+    .btn.primary {
+        background-color: var(--color-primary);
+        color: var(--color-light);
+    }
+    .btn.primary:hover {
+        background-color: #9b47e5;
+    }
+    /* Cart Specific Styles */
+    main {
+        padding: 40px 20px;
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+    h2 {
+        font-family: var(--font-heading);
+        color: var(--color-secondary);
+        text-align: center;
+        margin-bottom: 30px;
+    }
+    #cart-items {
+        background-color: #1a1a36; 
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+        padding: 20px;
+        min-height: 200px;
+    }
+    .cart-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 0;
+        border-bottom: 1px solid var(--color-accent);
+    }
+    .cart-item:last-child {
+        border-bottom: none;
+    }
+    .item-details {
+        flex-grow: 1;
+    }
+    .item-details h3 {
+        margin: 0;
+        font-size: 1.1rem;
+        color: var(--color-primary);
+    }
+    .item-details p {
+        margin: 0;
+        font-size: 0.9rem;
+        color: var(--color-light);
+    }
+    .quantity-controls {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .quantity-controls button {
+        background-color: var(--color-accent);
+        color: var(--color-light);
+        border: none;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+    .quantity-controls button:hover {
+        background-color: var(--color-primary);
+    }
+    .item-total {
+        width: 100px;
+        text-align: right;
+        font-weight: 600;
+        color: var(--color-secondary);
+    }
+    #cart-summary {
+        margin-top: 20px;
+        padding: 20px;
+        background-color: #2c254b;
+        border-radius: 10px;
+        text-align: right;
+    }
+    #cart-summary p {
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin: 5px 0;
+    }
+    #cart-summary .grand-total {
+        font-size: 1.5rem;
+        color: var(--color-primary);
+        border-top: 1px solid var(--color-light);
+        padding-top: 10px;
+        margin-top: 10px;
+    }
+    #cart-summary button {
+        margin-top: 20px;
+        font-size: 1.1rem;
+        padding: 15px 30px;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <a href="index.html" class="logo">
+        <i data-lucide="moon" style="width: 24px; height: 24px;"></i>
+        LUNAR VEIL CAFE ☕
+    </a>
+    <nav class="nav">
+        <a href="index.html">Home</a>
+        <a href="menu.html">Menu</a>
+        <a href="transactions.html">Wallet</a>
+        <a href="tracking.html">Tracking</a>
+        <a href="cart.html">Cart (<span id="cart-count">0</span>)</a>
+        <a id="profile-link" href="profile.html" style="display:none; margin-left: 20px;">Profile</a> 
+    </nav>
+    <div id="user-status-area" style="color: var(--color-light); font-weight: 600; white-space: nowrap;">
+        Loading Status...
+    </div>
+  </header>
+
+  <main>
+    <h2>YOUR SHOPPING CART</h2>
+    
+    <div id="cart-items">
+        </div>
+
+    <div id="cart-summary">
+        <p>Subtotal: <span id="subtotal">$0.00</span></p>
+        <p>Tax (10%): <span id="tax">$0.00</span></p>
+        <p class="grand-total">Grand Total: <span id="grand-total">$0.00</span></p>
+        
+        <a href="checkout.html" class="btn primary" id="proceed-to-checkout-btn">
+            Proceed to Checkout
+            <i data-lucide="arrow-right" style="width: 20px; height: 20px;"></i>
+        </a>
+    </div>
+  </main>
+
+<script>
+    const CART_STORAGE_KEY = 'cafeCart';
+    const authUrl = 'auth.php';
+    let cartItems = [];
+    
+    const cartItemsContainer = document.getElementById('cart-items');
+    const cartCountElement = document.getElementById('cart-count');
+    const subtotalElement = document.getElementById('subtotal');
+    const taxElement = document.getElementById('tax');
+    const grandTotalElement = document.getElementById('grand-total');
+
+    // --- CART CORE LOGIC ---
+    function loadCart() {
+        const storedCart = localStorage.getItem(CART_STORAGE_KEY);
+        if (storedCart) {
+            try {
+                cartItems = JSON.parse(storedCart);
+            } catch (e) {
+                console.error("Error parsing cart data:", e);
+                cartItems = [];
+            }
+        }
+    }
+    
+    function saveCart() {
+        localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cartItems));
+    }
+
+    function updateCartCount() {
+        const totalItems = cartItems.reduce((total, item) => total + item.quantity, 0);
+        cartCountElement.textContent = totalItems;
+    }
+
+    function calculateSummary() {
+        let subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+        const taxRate = 0.10; // 10% tax rate
+        let tax = subtotal * taxRate;
+        let grandTotal = subtotal + tax;
+
+        subtotalElement.textContent = `$${subtotal.toFixed(2)}`;
+        taxElement.textContent = `$${tax.toFixed(2)}`;
+        grandTotalElement.textContent = `$${grandTotal.toFixed(2)}`;
+    }
+
+    function updateQuantity(itemId, change) {
+        const itemIndex = cartItems.findIndex(item => item.id === itemId);
+
+        if (itemIndex > -1) {
+            cartItems[itemIndex].quantity += change;
+            
+            if (cartItems[itemIndex].quantity <= 0) {
+                // Remove item if quantity is zero or less
+                cartItems.splice(itemIndex, 1);
+            }
+            
+            saveCart();
+            loadAndRenderCart(); // Re-render the whole cart
+        }
+    }
+
+    function renderCart() {
+        cartItemsContainer.innerHTML = '';
+        
+        if (cartItems.length === 0) {
+            cartItemsContainer.innerHTML = '<p style="text-align: center; padding: 50px;">Your cosmic cart is currently empty. Start browsing our <a href="menu.html" style="color: var(--color-secondary);">menu</a>!</p>';
+            document.getElementById('proceed-to-checkout-btn').style.display = 'none';
+        } else {
+            document.getElementById('proceed-to-checkout-btn').style.display = 'inline-flex';
+            cartItems.forEach(item => {
+                const itemTotal = item.price * item.quantity;
+                const itemElement = document.createElement('div');
+                itemElement.classList.add('cart-item');
+                itemElement.innerHTML = `
+                    <div class="item-details">
+                        <h3>${item.name}</h3>
+                        <p>@ $${item.price.toFixed(2)}</p>
+                    </div>
+                    <div class="quantity-controls">
+                        <button onclick="updateQuantity('${item.id}', -1)">-</button>
+                        <span>${item.quantity}</span>
+                        <button onclick="updateQuantity('${item.id}', 1)">+</button>
+                    </div>
+                    <div class="item-total">$${itemTotal.toFixed(2)}</div>
+                `;
+                cartItemsContainer.appendChild(itemElement);
+            });
+        }
+        
+        calculateSummary();
+        updateCartCount();
+    }
+
+    function loadAndRenderCart() {
+        loadCart();
+        renderCart();
+    }
+    
+    // --- HEADER STATUS LOGIC ---
+    async function updateHeaderStatus() {
+        const statusDiv = document.getElementById('user-status-area');
+        const profileLink = document.getElementById('profile-link');
+        
+        try {
+            const response = await fetch(authUrl, {
+                method: 'POST', body: JSON.stringify({ action: 'status' }),
+                headers: { 'Content-Type': 'application/json' }
+            });
+            
+            if (!response.ok) {
+                throw new Error(`HTTP status: ${response.status}`);
+            }
+
+            const data = await response.json();
+
+            if (data.isLoggedIn) {
+                const formattedBalance = parseFloat(data.balance).toFixed(2);
+                
+                let userRole = data.role.toUpperCase();
+                if (userRole === '0') {
+                    userRole = 'CUSTOMER';
+                }
+
+                statusDiv.innerHTML = `
+                    Welcome, <b>${data.username}</b>! | 
+                    Role: <b>${userRole}</b> | 
+                    Balance: <b>$${formattedBalance}</b> 
+                    <button id="logout-btn" class="btn primary">
+                        <i data-lucide="log-out" style="width: 18px; height: 18px;"></i> Logout
+                    </button>
+                `;
+                
+                profileLink.style.display = 'inline-block';
+                
+                // Re-render icons and set listener for dynamic element
+                lucide.createIcons(); 
+                document.getElementById('logout-btn').addEventListener('click', async () => {
+                    await fetch(authUrl, { method: 'POST', body: JSON.stringify({ action: 'logout' }), headers: { 'Content-Type': 'application/json' } });
+                    window.location.href = 'index.html';
+                });
+
+            } else {
+                statusDiv.innerHTML = `<a href="login.html" style="color: var(--color-secondary); font-weight: 600;">Login / Register</a>`;
+                profileLink.style.display = 'none';
+            }
+        } catch (error) {
+            console.error("Error fetching status:", error);
+            statusDiv.innerHTML = 'Status Check Failed';
+        }
+        
+        lucide.createIcons();
+    }
+    
+    // --- INITIALIZATION ---
+    document.addEventListener('DOMContentLoaded', () => {
+        updateHeaderStatus();
+        loadAndRenderCart();
+        
+        // --- FIX: Add listener to ensure checkout button redirects ---
+        const checkoutBtn = document.getElementById('proceed-to-checkout-btn');
+        if (checkoutBtn) {
+            checkoutBtn.addEventListener('click', (e) => {
+                // We'll rely on the <a> tag's href attribute, but this listener 
+                // is a safeguard and a point to add future pre-checkout checks.
+                // The redirection occurs naturally due to the href="checkout.html".
+                // We only need the listener if we want to stop the redirect 
+                // (e.g., if cart is empty, which is handled in renderCart by display:none).
+                if (cartItems.length === 0) {
+                    e.preventDefault(); 
+                    alert("Your cart is empty. Please add items before checking out.");
+                }
+            });
+        }
+        // ------------------------------------------------
+    });
+</script>
+
+</body>
+</html>
