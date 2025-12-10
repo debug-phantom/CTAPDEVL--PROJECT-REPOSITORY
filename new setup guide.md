@@ -4,9 +4,9 @@ The first step is to ensure all your website files are in the correct directory 
 
 Action: Create a project folder inside the WAMP web root.
 
-Project Path: C:\wamp64\www\lunar-veil-cafe\
+Project Path: C:\wamp64\www\lunar_veil\
 
-Action: Copy ALL your files (all HTML, PHP, and SQL files) into this new lunar-veil-cafe folder.
+Action: Copy ALL your files (all HTML, PHP, and SQL files) into this new lunar_veil folder.
 
 Access URL: Your local website will be accessible at: http://localhost/lunar_veil/
 
@@ -94,3 +94,4 @@ Go to checkout.html and place the order.
 
 
 Verify that the order total is deducted from your wallet balance and that a new order entry appears in the orders and order_items tables in phpMyAdmin.
+
