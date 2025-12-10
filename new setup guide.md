@@ -8,7 +8,7 @@ Project Path: C:\wamp64\www\lunar-veil-cafe\
 
 Action: Copy ALL your files (all HTML, PHP, and SQL files) into this new lunar-veil-cafe folder.
 
-Access URL: Your local website will be accessible at: http://localhost/lunar-veil-cafe/
+Access URL: Your local website will be accessible at: http://localhost/lunar_veil/
 
 2. 🗄️ Database Creation and Import
 You will use WAMP's bundled phpMyAdmin to set up the database. We will use the setup.sql file as it appears to be the most current schema for your application.
@@ -91,5 +91,6 @@ Test 4: Order & Transaction
 Add items to the cart from the Menu.
 
 Go to checkout.html and place the order.
+
 
 Verify that the order total is deducted from your wallet balance and that a new order entry appears in the orders and order_items tables in phpMyAdmin.
