@@ -64,7 +64,7 @@ B. Final Action: Only change the $password if you specifically set a root passwo
 4. 🚀 Run and Test the Application
 The application is now set up! You should verify that all major features are connecting to the database correctly.
 
-Access: Open your browser to http://localhost/lunar-veil-cafe/
+Access: Open your browser to http://localhost/lunar_veil/
 
 Test 1: Menu & Database Read
 
@@ -91,7 +91,29 @@ Test 4: Order & Transaction
 Add items to the cart from the Menu.
 
 Go to checkout.html and place the order.
-
-
 Verify that the order total is deducted from your wallet balance and that a new order entry appears in the orders and order_items tables in phpMyAdmin.
+
+Access the website at:
+http://localhost/lunar_veil/index.html
+
+
+**IMPORTANT NOTES: DO NOT CHANGE OR ALTER ANY OF THE FILE NAME OR FILE TYPE. YOU MUST ENSURE THAT ALL OF THE FILES IN THE FOLDER lunar_veil (2) ARE IN THE SAME FOLDER.
+
+ADDITIONAL NOTE:
+1. YOU MUST NAME THE FOLDER IN YOUR FILE EXPLORER AS: lunar_veil. DO NOT NAME IT AS LUNAR_VEIL (2) or Lunar_veil or.. lunar_veil(2).
+2. MAKE SURE YOUR INTERNET OR DATA IS SECURED TO RUN ALL OF THESE FILES SMOOTHLY.
+3. THESE FILES ONLY WORK ON A LAPTOP OR PC.
+4. DO NOT CLAIM OWNERSHIP OF THE WEBSITE
+
+SETUP GUIDE PROVIDED BY: DEBUG_PHANTOM
+
+LUNAR VEIL CAFE WEBSITE BY
+JAMES ADRIAN B. CASTRO**
+
+
+
+
+
+
+
 
