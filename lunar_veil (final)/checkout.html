@@ -1,0 +1,544 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Lunar Veil Cafe ☕ — Checkout</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script> 
+
+  <style>
+    :root {
+    /* Base Colors (Unchanged from previous bright palette) */
+    --color-dark: #F4F0FF;          /* Base Background: Bright Pale Lavender/Mist */
+    --color-primary: #B264E6;       /* Main Accent: Radiant Amethyst Violet */
+    --color-secondary: #FFDB69;     /* Highlight/Stars: Vivid Glowing Gold (The main 'Yellow') */
+    --color-accent: #5F17A9;        /* Secondary Accent: Deep Celestial Violet */
+
+    /* TEXT COLOR FIX: Using only yellow/gold and white */
+    --color-light: #FFFFFF;         /* Text Color: Pure White (The main 'White') */
+    
+    --color-error: #FF6347;         /* Error Color */
+    --color-success: #4CAF50;       /* Success Color */
+    --font-heading: 'Cinzel', serif;
+    --font-body: 'Inter', sans-serif;
+}
+    *{box-sizing:border-box}
+    body{
+      margin:0;min-height:100vh;font-family:var(--font-body);
+      background-color:var(--color-dark);color:var(--color-light);
+      background-image:radial-gradient(var(--color-accent) 1px, transparent 0), radial-gradient(var(--color-accent) 1px, transparent 0);
+      background-size:40px 40px;background-position:0 0, 20px 20px;
+    }
+    header{
+      background-color:var(--color-accent);
+      box-shadow:0 4px 12px rgba(0,0,0,0.4);
+      padding:1rem 1.5rem;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+    }
+    .logo-title{
+      font-family:var(--font-heading);
+      font-size:1.8rem;
+      color:var(--color-secondary);
+      text-shadow:0 0 8px var(--color-primary);
+    }
+    .main-nav a{
+      color:var(--color-light);
+      text-decoration:none;
+      margin-left:1.5rem;
+      transition:color 0.2s;
+    }
+    .main-nav a:hover{
+      color:var(--color-primary);
+    }
+    .main-container{
+      max-width:1000px;
+      margin:50px auto;
+      padding:20px;
+    }
+    .checkout-layout{
+      display:grid;
+      grid-template-columns:2fr 1fr;
+      gap:30px;
+    }
+    .details-card,.summary-card{
+      background-color:#1a1a3a;
+      padding:25px;
+      border-radius:10px;
+      box-shadow:0 0 15px rgba(0,0,0,0.5);
+    }
+    .section-title{
+      font-family:var(--font-heading);
+      color:var(--color-secondary);
+      border-bottom:2px solid var(--color-primary);
+      padding-bottom:5px;
+      margin-bottom:20px;
+      font-size:1.6rem;
+    }
+    .input-group label{
+      display:block;
+      margin-bottom:5px;
+      font-weight:600;
+    }
+    .input-group input,.input-group textarea{
+      width:100%;
+      padding:10px;
+      margin-bottom:15px;
+      border:1px solid var(--color-accent);
+      border-radius:5px;
+      background-color:#2c254b;
+      color:var(--color-light);
+      font-family:var(--font-body);
+    }
+    
+    /* --- Pickup/Delivery Styles --- */
+    .order-type-selection {
+        display: flex;
+        gap: 20px;
+        margin-bottom: 20px;
+    }
+    .radio-group {
+        flex: 1; /* Make the buttons fill the space */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: var(--color-accent);
+        padding: 10px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        border: 2px solid transparent;
+        transition: border-color 0.2s;
+    }
+    .radio-group:has(input:checked) {
+        border-color: var(--color-primary);
+    }
+    .radio-group input[type="radio"] {
+        margin-right: 10px;
+        appearance: none;
+        width: 18px;
+        height: 18px;
+        border: 2px solid var(--color-primary);
+        border-radius: 50%;
+        position: relative;
+        cursor: pointer;
+    }
+    .radio-group input[type="radio"]:checked:after {
+        content: '';
+        position: absolute;
+        top: 3px;
+        left: 3px;
+        width: 10px;
+        height: 10px;
+        background-color: var(--color-secondary);
+        border-radius: 50%;
+    }
+
+    /* --- Summary Styles --- */
+    .item-list-entry{
+      display:flex;
+      justify-content:space-between;
+      border-bottom:1px dashed #4a4a70;
+      padding:8px 0;
+      font-size:0.95rem;
+    }
+    .summary-line{
+      display:flex;
+      justify-content:space-between;
+      padding:10px 0;
+      font-weight:600;
+    }
+    #summary-delivery-fee{
+      color:var(--color-primary);
+    }
+    .summary-line.total{
+      font-size:1.4rem;
+      border-top:2px solid var(--color-primary);
+      margin-top:10px;
+      padding-top:15px;
+      color:var(--color-secondary);
+      font-family:var(--font-heading);
+    }
+    
+    .btn{
+      width:100%;
+      padding:15px;
+      border:none;
+      border-radius:5px;
+      background-color:var(--color-primary);
+      color:var(--color-light);
+      font-weight:700;
+      font-size:1.1rem;
+      cursor:pointer;
+      transition:background-color 0.2s;
+      margin-top:20px;
+    }
+    .btn:hover:not(:disabled){
+      background-color:#9A4BEF;
+    }
+    .btn:disabled{
+      background-color:#4a4a70;
+      cursor:not-allowed;
+    }
+    .message-box{
+      padding:10px;
+      border-radius:5px;
+      margin-top:10px;
+      text-align:center;
+      font-weight:600;
+      display:none;
+    }
+    .message-error{
+      background-color:rgba(255,99,71,0.1);
+      border:1px solid var(--color-error);
+      color:var(--color-error);
+    }
+    .message-success{
+      background-color:rgba(50,205,50,0.1);
+      border:1px solid var(--color-success);
+      color:var(--color-success);
+    }
+    #warning-low-balance{
+        padding: 10px;
+        background-color: var(--color-error);
+        color: var(--color-light);
+        border-radius: 5px;
+        text-align: center;
+        margin-top: 15px;
+        font-weight: 600;
+        display: none;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo-title">Lunar Veil Cafe ☕</div>
+    <nav class="main-nav">
+      <a href="index.html">Menu</a>
+      <a href="transactions.html">Wallet</a>
+      <a href="tracking.html">Orders</a>
+      <a href="cart.html">Cart</a>
+    </nav>
+  </header>
+
+  <main class="main-container">
+    <h1 class="section-title" style="text-align:center;">Finalize Your Order</h1>
+
+    <div id="checkout-message" class="message-box"></div>
+
+    <div class="checkout-layout">
+      
+      <div class="details-card">
+        <h2 class="section-title">Order Details</h2>
+        <form id="checkoutForm">
+            
+            <div class="input-group">
+                <label>Order Type</label>
+                <div class="order-type-selection">
+                    <label class="radio-group">
+                        <input type="radio" name="order-type" value="Pickup" id="order-type-pickup" checked>
+                        <i data-lucide="coffee" style="width: 18px; height: 18px; margin-right: 5px;"></i> Pickup (No fee)
+                    </label>
+                    <label class="radio-group">
+                        <input type="radio" name="order-type" value="Delivery" id="order-type-delivery">
+                        <i data-lucide="truck" style="width: 18px; height: 18px; margin-right: 5px;"></i> Delivery (₱50.00 fee)
+                    </label>
+                </div>
+            </div>
+
+            <div class="input-group" id="delivery-address-group" style="display: none;">
+                <label for="address-note">Delivery Address / Pickup Note</label>
+                <textarea id="address-note" rows="3" placeholder="Enter full delivery address or any special pickup instructions (e.g., waiting at the purple table)."></textarea>
+            </div>
+            
+            <div class="input-group">
+                <label for="contact-number">Contact Number</label>
+                <input type="text" id="contact-number" required placeholder="+63 9xx xxxx xxx">
+            </div>
+
+            <div class="input-group">
+                <label for="special-notes">Special Notes (Optional)</label>
+                <textarea id="special-notes" rows="2" placeholder="e.g., Less sugar, extra napkins"></textarea>
+            </div>
+        </form>
+      </div>
+
+      <div class="summary-card">
+        <h2 class="section-title">Order Summary</h2>
+        <div id="item-summary-list">
+          <div class="item-list-entry"><span>Cart is empty.</span></div>
+        </div>
+
+        <div class="summary-line">
+          <span>Subtotal:</span>
+          <span id="summary-subtotal">₱0.00</span>
+        </div>
+        <div class="summary-line">
+          <span>Tax (12%):</span>
+          <span id="summary-tax">₱0.00</span>
+        </div>
+        <div class="summary-line">
+          <span>Delivery Fee:</span>
+          <span id="summary-delivery-fee">₱0.00</span>
+        </div>
+
+        <div class="summary-line total">
+          <span>Grand Total:</span>
+          <span id="summary-grand-total">₱0.00</span>
+        </div>
+        
+        <div id="wallet-balance-display">
+            Your Wallet Balance: <strong>₱0.00</strong>
+        </div>
+        <div id="warning-low-balance">
+            Wallet Balance is Insufficient!
+        </div>
+
+        <button type="submit" form="checkoutForm" id="placeOrderBtn" class="btn">
+          <i data-lucide="check-circle" style="width: 20px; height: 20px; vertical-align: middle;"></i>
+          Place Order & Pay 
+        </button>
+      </div>
+
+    </div>
+  </main>
+
+<script>
+    const CURRENCY = '₱';
+    const TAX_RATE = 0.12;
+    const DELIVERY_FEE = 50.00; // Fixed delivery fee
+    const WALLET_URL = 'wallet.php';
+    const ORDER_URL = 'order.php';
+    const AUTH_URL = 'auth.php'; 
+
+    let cart = [];
+    let walletBalance = 0;
+
+    // --- Core Functions ---
+
+    async function checkLoginStatus() {
+        try {
+            const response = await fetch(AUTH_URL, { 
+                method: 'POST', 
+                body: JSON.stringify({ action: 'status' }), 
+                headers: { 'Content-Type': 'application/json' } 
+            });
+            const data = await response.json();
+            if (!data.isLoggedIn) {
+                window.location.href = 'login.html';
+                return;
+            }
+            loadCart();
+            await loadWalletBalance();
+            calculate(); 
+        } catch (error) {
+            console.error('Error checking login status:', error);
+            displayMessage('checkout-message', 'Connection error, please try again.', 'error');
+        }
+    }
+
+    async function loadWalletBalance() {
+        try {
+            const response = await fetch(WALLET_URL, {
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'get_balance' })
+            });
+            const data = await response.json();
+
+            if (data.success) {
+                walletBalance = parseFloat(data.balance);
+                document.getElementById('wallet-balance-display').innerHTML = 
+                    `Your Wallet Balance: <strong>${CURRENCY}${walletBalance.toFixed(2)}</strong>`;
+            } else {
+                walletBalance = 0;
+                console.error('Failed to load wallet balance:', data.message);
+            }
+        } catch (error) {
+            console.error('Fetch error loading wallet balance:', error);
+            walletBalance = 0;
+        }
+    }
+
+    function loadCart() {
+        const cartData = localStorage.getItem('cafeCart');
+        cart = cartData ? JSON.parse(cartData) : [];
+
+        if (cart.length === 0) {
+            displayMessage('checkout-message', 'Your cart is empty. Redirecting to menu...', 'error');
+            setTimeout(() => { window.location.href = 'index.html'; }, 3000);
+            return;
+        }
+
+        const list = document.getElementById('item-summary-list');
+        list.innerHTML = cart.map(i => `
+            <div class="item-list-entry">
+                <span>${i.quantity}x ${i.name}</span>
+                <span>${CURRENCY}${(i.price * i.quantity).toFixed(2)}</span>
+            </div>
+        `).join('');
+    }
+
+    // CRITICAL: Updated calculate function to include Delivery Fee logic
+    function calculate() {
+        const orderType = document.querySelector('input[name="order-type"]:checked')?.value || 'Pickup';
+        const subtotal = cart.reduce((s, i) => s + i.price * i.quantity, 0);
+        const tax = subtotal * TAX_RATE;
+        // Use a standard calculation precision
+        const delivery = (orderType === 'Delivery') ? DELIVERY_FEE : 0;
+        const total = subtotal + tax + delivery;
+
+        // Displaying results, rounding to 2 decimal places for visual consistency
+        document.getElementById('summary-subtotal').textContent = `${CURRENCY}${subtotal.toFixed(2)}`;
+        document.getElementById('summary-tax').textContent = `${CURRENCY}${tax.toFixed(2)}`;
+        document.getElementById('summary-delivery-fee').textContent = `${CURRENCY}${delivery.toFixed(2)}`;
+        document.getElementById('summary-grand-total').textContent = `${CURRENCY}${total.toFixed(2)}`;
+
+        const warn = document.getElementById('warning-low-balance');
+        const btn = document.getElementById('placeOrderBtn');
+
+        if (total > walletBalance) {
+            warn.style.display = 'block';
+            btn.disabled = true;
+            btn.innerHTML = 'Insufficient Funds';
+        } else {
+            warn.style.display = 'none';
+            btn.disabled = false;
+            btn.innerHTML = `<i data-lucide="check-circle" style="width: 20px; height: 20px; vertical-align: middle;"></i> Place Order & Pay`;
+        }
+        lucide.createIcons();
+    }
+    
+    // --- Event Handlers ---
+
+    document.getElementById('checkoutForm').addEventListener('submit', handleCheckout);
+    
+    // Listen for changes on all radio buttons to update calculations and address visibility
+    document.querySelectorAll('input[name="order-type"]').forEach(radio => {
+        radio.addEventListener('change', (e) => {
+            const isDelivery = e.target.value === 'Delivery';
+            const addressGroup = document.getElementById('delivery-address-group');
+            const addressNote = document.getElementById('address-note');
+            
+            addressGroup.style.display = isDelivery ? 'block' : 'none';
+            
+            // Update placeholder/requirement based on selection
+            if(isDelivery) {
+                addressNote.placeholder = "Enter full delivery address";
+                addressNote.required = true;
+            } else {
+                addressNote.placeholder = "Enter any special pickup instructions (e.g., waiting at the purple table).";
+                addressNote.required = false;
+            }
+            
+            calculate(); // Recalculate total
+        });
+    });
+
+    // Recalculate on input changes (mostly for ensuring form validity status is respected)
+    document.getElementById('contact-number').addEventListener('input', calculate);
+
+
+    async function handleCheckout(e) {
+        e.preventDefault();
+
+        // --- 1. Gather Data ---
+        const orderType = document.querySelector('input[name="order-type"]:checked')?.value || 'Pickup';
+        const addressNote = document.getElementById('address-note').value.trim();
+        const contactNumber = document.getElementById('contact-number').value.trim();
+        const specialNotes = document.getElementById('special-notes').value.trim();
+
+        // Recalculate final totals just before sending to ensure accuracy
+        const subtotal = cart.reduce((s, i) => s + i.price * i.quantity, 0);
+        const taxAmount = subtotal * TAX_RATE;
+        const deliveryFee = (orderType === 'Delivery') ? DELIVERY_FEE : 0;
+        const grandTotal = subtotal + taxAmount + deliveryFee;
+
+        // --- 2. Client-side Validation ---
+        if (cart.length === 0) {
+            displayMessage('checkout-message', 'Cart is empty. Please add items.', 'error');
+            return;
+        }
+
+        if (orderType === 'Delivery' && addressNote === '') {
+            displayMessage('checkout-message', 'Please provide a delivery address.', 'error');
+            return;
+        }
+        if (contactNumber === '') {
+            displayMessage('checkout-message', 'Please provide a contact number.', 'error');
+            return;
+        }
+        
+        if (grandTotal > walletBalance) {
+            displayMessage('checkout-message', 'Payment failed: Insufficient wallet balance.', 'error');
+            return;
+        }
+        
+        displayMessage('checkout-message', 'Processing payment and order...', 'success');
+
+        try {
+            // --- 3. Send Order to Backend (order.php) ---
+            const orderPayload = {
+                action: 'place_order',
+                cart: cart,
+                total_amount: grandTotal.toFixed(2),
+                subtotal: subtotal.toFixed(2),
+                tax_amount: taxAmount.toFixed(2),
+                delivery_fee: deliveryFee.toFixed(2),
+                
+                // NEW FIELDS
+                order_type: orderType,
+                address_note: addressNote,
+                contact_number: contactNumber,
+                special_notes: specialNotes
+            };
+
+            const orderResponse = await fetch(ORDER_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(orderPayload)
+            });
+
+            const orderData = await orderResponse.json();
+
+            if (orderData.success) {
+                // SUCCESS: Clear cart and redirect
+                localStorage.removeItem('cafeCart');
+                displayMessage('checkout-message', `Order ${orderData.orderId} placed successfully! Redirecting to tracking...`, 'success');
+                setTimeout(() => {
+                    window.location.href = 'tracking.html';
+                }, 3000);
+
+            } else {
+                // ERROR: Order failed during server processing (e.g., funds check, DB error)
+                displayMessage('checkout-message', `Order Failed: ${orderData.message}`, 'error');
+                loadWalletBalance(); // Reload balance to show actual state
+            }
+
+        } catch (error) {
+            console.error('Checkout error:', error);
+            displayMessage('checkout-message', 'A critical connection error occurred during checkout.', 'error');
+        }
+    }
+
+    function displayMessage(id, message, type) {
+        const msgElement = document.getElementById(id);
+        msgElement.innerText = message;
+        msgElement.className = `message-box message-${type}`;
+        msgElement.style.display = 'block';
+    }
+
+    // --- Initialization ---
+    document.addEventListener('DOMContentLoaded', () => {
+        lucide.createIcons();
+        checkLoginStatus(); 
+        
+        // Ensure initial state for delivery address visibility and calculation
+        const isDelivery = document.getElementById('order-type-delivery').checked;
+        document.getElementById('delivery-address-group').style.display = isDelivery ? 'block' : 'none';
+        document.getElementById('address-note').required = isDelivery;
+    });
+</script>
+</body>
+</html>

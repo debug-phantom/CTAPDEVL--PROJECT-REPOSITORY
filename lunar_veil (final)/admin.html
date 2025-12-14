@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel | Lunar Veil Cafe</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        /* Shared Styles */
+:root {
+    --color-dark: #F4F0FF;          /* Base Background: Bright Pale Lavender/Mist */
+    --color-primary: #B264E6;       /* Main Accent: Radiant Amethyst Violet */
+    --color-secondary: #FFDB69;     /* Highlight/Stars: Vivid Glowing Gold */
+    --color-soft-gold-bg: #FFF8E1;  /* Very Pale, Soft Gold Background */
+    --color-accent: #5F17A9;        /* Secondary Accent: Deep Celestial Violet */
+    --color-light: #1A1628;         /* Text Color: Very Dark Plum (Near Black) */
+    --color-error: #FF6347;         /* Error Color */
+    --color-celestial-blue: #87CEEB; /* Light Celestial Blue */
+    --color-soft-white: #FAF9F6;    /* Soft/Darker White for Container BG */
+    --font-heading: 'Cinzel', serif;
+    --font-body: 'Inter', sans-serif;
+}
+   body {
+            font-family: var(--font-body);
+            background-color: var(--color-dark); /* Light background */
+            color: var(--color-light); /* Dark text */
+            margin: 0;
+            padding: 0;
+            /* --- MODIFIED BACKGROUND FOR LIGHT LUNAR VEIL THEME --- */
+            background-image: 
+                /* Subtle Darker Dots/Stars on light background */
+                radial-gradient(circle at 25% 10%, rgba(29, 29, 44, 0.1) 1.5px, transparent 0), 
+                radial-gradient(circle at 75% 90%, rgba(29, 29, 44, 0.1) 1.5px, transparent 0),
+                /* Light Blue/Silver Glow (Moonlight) */
+                radial-gradient(circle at 50% 50%, rgba(180, 200, 255, 0.2) 15%, transparent 30%), 
+                /* Purple Veil (Livelier) */
+                radial-gradient(circle at 0% 100%, rgba(108, 78, 234, 0.25) 15%, transparent 45%), 
+                /* Gold Veil (Livelier) */
+                radial-gradient(circle at 100% 0%, rgba(255, 184, 0, 0.2) 15%, transparent 40%),
+                var(--color-dark); /* Light base */
+            
+            background-size:
+                250px 250px,
+                250px 250px,
+                100% 100%,
+                100% 100%,
+                100% 100%,
+                cover;
+            
+            background-position:
+                0 0,
+                125px 125px,
+                center center,
+                center center,
+                center center,
+                center center;
+            
+            background-repeat: repeat, repeat, no-repeat, no-repeat, no-repeat, no-repeat;
+            min-height: 100vh;
+        }
+        header {
+            background-color: var(--color-accent); /* Light accent color */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Lighter shadow */
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        .logo-title {
+            font-family: var(--font-heading);
+            font-size: 1.8rem;
+            color: var(--color-primary); /* Deep violet */
+            text-shadow: 0 0 4px rgba(0, 0, 0, 0.1); /* Softer shadow */
+            line-height: 1;
+        }
+        .nav-button {
+            background-color: var(--color-primary);
+            color: var(--color-dark); /* Light text on primary button */
+            border: none;
+            padding: 0.75rem 1.25rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.3s, transform 0.2s, box-shadow 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+        .nav-button:hover {
+            background-color: #8D6FEF; /* Lighter shade on hover */
+            transform: translateY(-1px);
+        }
+        .nav-button.secondary {
+            background-color: transparent;
+            color: var(--color-primary);
+            border: 2px solid var(--color-primary);
+            padding: 0.65rem 1.15rem;
+        }
+        .nav-button.secondary:hover {
+            background-color: var(--color-primary);
+            color: var(--color-dark); /* Light text on primary background */
+        }
+        #logout-btn.nav-button.secondary {
+            border-color: var(--color-error); 
+            color: var(--color-error); 
+            padding: 8px 12px;
+        }
+
+        /* Admin Specific Styles */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1.5rem;
+        }
+        .main-title {
+            font-family: var(--font-heading);
+            color: var(--color-primary);
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        .card {
+            background-color: #FFFFFF; /* Pure white card for contrast */
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15); /* Softer shadow */
+            border: 1px solid var(--color-accent); /* Use light accent for border */
+            margin-bottom: 20px;
+        }
+        
+        .order-table-container {
+            overflow-x: auto;
+        }
+        .order-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            margin-top: 15px;
+        }
+        .order-table th, .order-table td {
+            padding: 10px 15px;
+            border-bottom: 1px solid #C0C8D9; /* Lighter table divider */
+            white-space: nowrap; /* Prevent wrapping on essential columns */
+        }
+        .order-table th {
+            background-color: var(--color-accent); /* Light accent color */
+            color: var(--color-light); /* Dark text */
+            font-size: 0.9rem;
+        }
+        .order-table td {
+            font-size: 0.85rem;
+        }
+        
+        .status-select {
+            padding: 5px;
+            border-radius: 4px;
+            background-color: var(--color-dark); /* Light base */
+            color: var(--color-light); /* Dark text */
+            border: 1px solid var(--color-primary);
+        }
+        .status-select option:checked {
+            background-color: var(--color-primary);
+            color: var(--color-dark); /* Light text on primary background */
+        }
+        
+        /* Status Colors for Display (unchanged but contrast naturally better) */
+        .status-Pending { color: var(--color-secondary); }
+        .status-Making { color: #00bfff; }
+        .status-ReadyForPickup { color: #00e676; }
+        .status-Delivered { color: #00e676; }
+        .status-Cancelled { color: var(--color-error); }
+        
+        /* Message Box */
+        .message-container {
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 600;
+        }
+        .message-error {
+            background-color: #FFDDDD; /* Light red background */
+            color: var(--color-error);
+            border: 1px solid var(--color-error);
+        }
+        .message-success {
+            background-color: #DDFFDD; /* Light green background */
+            color: #00a000;
+            border: 1px solid #00a000;
+        }
+        
+        /* Denied Access Overlay */
+        #access-denied-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85); /* Keep overlay dark */
+            z-index: 100;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            text-align: center;
+        }
+        #access-denied-overlay h1 {
+            color: var(--color-error);
+            font-family: var(--font-heading);
+            font-size: 2.5rem;
+        }
+        #access-denied-overlay p {
+            color: var(--color-dark); /* Light color text on dark overlay */
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    
+    <div id="access-denied-overlay" style="display: none;">
+        <h1><i data-lucide="shield-off" style="width: 48px; height: 48px; display: block; margin: 0 auto 15px;"></i> ACCESS DENIED</h1>
+        <p id="denial-message">You do not have the required permissions to view this panel.</p>
+        <a href="index.html" class="nav-button">Go Home</a>
+    </div>
+
+    <header>
+        <div class="logo-title">Admin Panel</div>
+        <nav>
+            <a href="index.html" class="nav-button secondary"><i data-lucide="home"></i> Home</a> 
+            <a href="tracking.html" class="nav-button secondary"><i data-lucide="car"></i> Tracking</a>
+        </nav>
+        <button id="logout-btn" class="nav-button secondary">
+            <i data-lucide="log-out" style="width: 18px; height: 18px;"></i> Logout
+        </button>
+    </header>
+
+    <main class="container">
+        <h1 class="main-title">CAFE ORDER MANAGEMENT</h1>
+
+        <div id="messages" class="message-container" style="display: none;"></div>
+
+        <section class="card">
+            <h2><i data-lucide="clipboard-list" style="vertical-align: middle;"></i> All Recent Orders</h2>
+            <div class="order-table-container">
+                <table class="order-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Date</th>
+                            <th>Customer</th>
+                            <th>Items</th>
+                            <th>Total</th>
+                            <th>Current Status</th>
+                            <th>Update Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="orders-list">
+                        <tr><td colspan="7" style="text-align: center;">Loading orders...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+        
+        </main>
+
+    <script>
+        const authUrl = 'auth.php';
+        const adminUrl = 'admin.php'; 
+        
+        // Define all valid statuses for the dropdown
+        const ORDER_STATUSES = ['Pending', 'Making', 'ReadyForPickup', 'Delivered', 'Cancelled'];
+
+        // --- ACCESS & AUTHENTICATION ---
+        async function checkAdminAccess() {
+            try {
+                // Check login status first. Auth.php handles the role check via session.
+                const response = await fetch(authUrl, { 
+                    method: 'POST', 
+                    body: JSON.stringify({ action: 'status' }), 
+                    headers: { 'Content-Type': 'application/json' } 
+                });
+                const data = await response.json();
+
+                if (!data.isLoggedIn) {
+                    window.location.href = 'login.html';
+                    return;
+                }
+                
+                // Directly call an action in admin.php to test role access
+                await loadOrders(); 
+
+            } catch (error) { 
+                console.error('Error checking admin access:', error); 
+                // If there's a network error, assume no access until fixed
+                document.getElementById('denial-message').innerText = 'Connection error. Could not verify user permissions.';
+                document.getElementById('access-denied-overlay').style.display = 'flex';
+            }
+        }
+
+        // --- DATA LOADING ---
+        async function loadOrders() {
+            const ordersList = document.getElementById('orders-list');
+            ordersList.innerHTML = '<tr><td colspan="7" style="text-align: center;">Fetching latest orders...</td></tr>';
+            
+            try {
+                const response = await fetch(adminUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'get_all_orders' }) 
+                });
+
+                if (response.status === 403) {
+                    const errorData = await response.json();
+                    document.getElementById('denial-message').innerText = errorData.message || 'You do not have the required staff privileges.';
+                    document.getElementById('access-denied-overlay').style.display = 'flex';
+                    return;
+                }
+
+                const data = await response.json();
+
+                if (data.success) {
+                    renderOrdersTable(data.orders);
+                } else {
+                    displayMessage(data.message || 'Failed to load orders.', 'error');
+                    ordersList.innerHTML = '<tr><td colspan="7" style="text-align: center;">' + (data.message || 'Error loading data.') + '</td></tr>';
+                }
+            } catch (error) {
+                console.error('Error fetching orders:', error);
+                displayMessage('A network error occurred while fetching orders.', 'error');
+                ordersList.innerHTML = '<tr><td colspan="7" style="text-align: center;">Network Error.</td></tr>';
+            }
+        }
+        
+        // --- RENDERING ---
+        function renderOrdersTable(orders) {
+            const ordersList = document.getElementById('orders-list');
+            
+            if (orders.length === 0) {
+                ordersList.innerHTML = '<tr><td colspan="7" style="text-align: center;">No orders found in the system.</td></tr>';
+                return;
+            }
+
+            ordersList.innerHTML = orders.map(order => {
+                const statusClass = `status-${order.status.replace(/\s/g, '')}`;
+                const dateObj = new Date(order.order_date);
+                const date = isNaN(dateObj.getTime()) ? order.order_date : dateObj.toLocaleString();
+
+                const statusOptions = ORDER_STATUSES.map(status => 
+                    `<option value="${status}" ${order.status === status ? 'selected' : ''}>${status}</option>`
+                ).join('');
+                
+                return `
+                    <tr>
+                        <td>#${order.id}</td>
+                        <td>${date}</td>
+                        <td>${order.customer} (ID: ${order.user_id})</td>
+                        <td>${order.items_summary}</td>
+                        <td>₱${order.total_amount}</td>
+                        <td class="${statusClass}">${order.status}</td>
+                        <td>
+                            <select class="status-select" data-order-id="${order.id}">
+                                ${statusOptions}
+                            </select>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+            
+            document.querySelectorAll('.status-select').forEach(select => {
+                select.addEventListener('change', (e) => {
+                    const orderId = e.target.getAttribute('data-order-id');
+                    const newStatus = e.target.value;
+                    updateOrderStatus(orderId, newStatus);
+                });
+            });
+        }
+        
+        // --- ACTION HANDLERS ---
+        async function updateOrderStatus(orderId, newStatus) {
+            displayMessage('Updating...', 'none'); 
+            
+            try {
+                const response = await fetch(adminUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'update_order_status',
+                        order_id: orderId,
+                        new_status: newStatus
+                    })
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                    displayMessage(`Order #${orderId} status successfully changed to ${newStatus}.`, 'success');
+                    loadOrders(); 
+                } else {
+                    displayMessage(`Failed to update order #${orderId}: ${data.message}`, 'error');
+                }
+            } catch (error) {
+                console.error('Update status error:', error);
+                displayMessage('A connection error occurred during status update.', 'error');
+            }
+        }
+
+        function displayMessage(message, type) {
+            const msgElement = document.getElementById('messages');
+            msgElement.style.display = type === 'none' ? 'none' : 'block';
+            msgElement.innerText = message;
+            msgElement.className = `message-container message-${type}`;
+            
+            if (type !== 'none' && type !== 'updating') {
+                 setTimeout(() => {
+                    msgElement.style.display = 'none';
+                 }, 5000); 
+            }
+        }
+        
+        document.getElementById('logout-btn').addEventListener('click', async () => {
+            await fetch(authUrl, { method: 'POST', body: JSON.stringify({ action: 'logout' }), headers: { 'Content-Type': 'application/json' } });
+            window.location.href = 'login.html';
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            checkAdminAccess();
+        });
+    </script>
+</body>
+</html>

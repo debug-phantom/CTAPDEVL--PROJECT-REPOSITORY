@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Tracking | Lunar Veil Cafe</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        /* Shared Styles */
+        :root {
+    --color-dark: #F4F0FF;          /* Base Background: Bright Pale Lavender/Mist */
+    --color-primary: #B264E6;       /* Main Accent: Radiant Amethyst Violet */
+    --color-secondary: #FFDB69;     /* Highlight/Stars: Vivid Glowing Gold (Yellow/Gold) */
+    --color-accent: #5F17A9;        /* Secondary Accent: Deep Celestial Violet */
+    --color-light: #FFDB69;         /* Text Color: Vivid Glowing Gold (All Text) */
+    --color-error: #FF6347;         /* Error Color */
+    --color-celestial-blue: #87CEEB; /* Light Celestial Blue */
+    --color-soft-white: #FAF9F6;    /* Soft/Darker White for Container BG */
+    --font-heading: 'Cinzel', serif;
+    --font-body: 'Inter', sans-serif;
+}
+        body {
+            font-family: var(--font-body);
+            background-color: var(--color-dark);
+            color: var(--color-light);
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            background-image: radial-gradient(var(--color-accent) 1px, transparent 0), radial-gradient(var(--color-accent) 1px, transparent 0);
+            background-size:80px 80px;background-position:0 0,40px 40px;
+            padding-bottom: 50px;
+        }
+        header {
+            background-color: var(--color-accent);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+            padding: 1rem 1.5rem;
+            display: flex;
+            /* CHANGE 1: Use flex-start and gap to control spacing */
+            justify-content: flex-start;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            gap: 30px; /* Space between Logo, Nav, and Header Actions */
+        }
+        .logo-title {
+            /* RE-STYLE TO MATCH INDEX.HTML LOGO */
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            color: var(--color-primary);
+            display: flex;
+            align-items: center;
+            text-decoration: none; /* Make sure it doesn't look like a link */
+            /* Removed: text-shadow: 0 0 8px var(--color-primary); */
+            /* Removed: line-height: 1; */
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 1.5rem;
+        }
+        .card {
+            background-color: #1a1a3a;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--color-primary);
+            margin-bottom: 25px;
+            text-align: left;
+        }
+        /* Style for the main navigation area */
+        nav {
+            display: flex;
+            gap: 8px; 
+            align-items: center;
+            /* CHANGE 2: Use flex-grow 1 to push the header-actions to the right */
+            flex-grow: 1; 
+        }
+        .nav-button {
+            background-color: var(--color-primary);
+            color: var(--color-dark);
+            border: none;
+            padding: 0.75rem 1.25rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.3s, transform 0.2s, box-shadow 0.2s;
+            display: inline-flex;
+            align-items: center;
+            /* FIX: Remove default gap from button and apply it inside (or just rely on default) */
+            gap: 5px; 
+            text-decoration: none;
+        }
+        .nav-button:hover {
+            background-color: #9B30FF;
+            transform: translateY(-1px);
+        }
+        .nav-button.secondary {
+            background-color: transparent;
+            color: var(--color-primary);
+            border: 2px solid var(--color-primary);
+            padding: 0.65rem 1.15rem;
+        }
+        .nav-button.secondary:hover {
+            background-color: var(--color-primary);
+            color: var(--color-dark);
+        }
+        #logout-btn.nav-button.secondary {
+            border-color: var(--color-error); 
+            color: var(--color-error); 
+            padding: 8px 12px;
+            margin-left: 10px; /* Add slight space from cart button */
+        }
+        .header-actions {
+            /* Ensure the logout button is always to the far right and aligned */
+            display: flex;
+            align-items: center;
+            /* Use flex-shrink to prevent the button from disappearing if space is tight */
+            flex-shrink: 0;
+        }
+
+
+        .main-title {
+            color: var(--color-secondary);
+            font-family: var(--font-heading);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        /* Order Tracking Styles */
+        .order-summary-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #3c2a63;
+        }
+        .order-details {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        #order-id {
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            color: var(--color-primary);
+        }
+        #order-total {
+            font-weight: 600;
+            color: var(--color-secondary);
+        }
+        .cancel-button {
+            border-color: var(--color-error); 
+            color: var(--color-error); 
+            padding: 0.65rem 1.15rem; 
+        }
+        .cancel-button:hover {
+            background-color: var(--color-error);
+            color: var(--color-dark);
+        }
+
+        /* Status Bar */
+        #status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            position: relative;
+            padding: 20px 0;
+            text-align: center;
+        }
+        
+        /* 1. Base Line (Grey) - PERFECT ALIGNMENT */
+        #status-bar::before {
+            content: '';
+            position: absolute;
+            top: 35px; 
+            left: 12.5%; 
+            right: 12.5%; 
+            height: 4px;
+            background-color: #3c2a63;
+            z-index: 1;
+        }
+        
+        /* 2. Active Line (Purple) */
+        #active-line {
+            position: absolute;
+            top: 35px; 
+            left: 12.5%; 
+            width: 0; 
+            height: 4px;
+            background-color: var(--color-primary);
+            z-index: 1;
+            transition: width 0.6s ease-out; 
+        }
+
+        .status-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+            z-index: 2;
+        }
+        .icon-circle {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: #3c2a63;
+            border: 4px solid var(--color-dark);
+            margin-bottom: 10px;
+            transition: background-color 0.5s, border-color 0.5s, box-shadow 0.5s;
+            
+            /* Center the icon inside the circle */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--color-light); 
+        }
+        .status-label {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--color-light);
+            transition: color 0.5s;
+        }
+
+        /* Active/Completed Styles */
+        .status-step.active .icon-circle {
+            background-color: var(--color-primary);
+            border-color: var(--color-secondary);
+            color: var(--color-dark); 
+        }
+        .status-step.active .status-label {
+            color: var(--color-secondary);
+        }
+        
+        /* Pulsing animation for current step */
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(138, 43, 226, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(138, 43, 226, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(138, 43, 226, 0); }
+        }
+
+        .status-step.current .icon-circle {
+            box-shadow: 0 0 10px var(--color-primary);
+            animation: pulse 1.5s infinite;
+        }
+
+        /* Status Message (for errors/cancellations) */
+        .status-message {
+            width: 100%;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+            text-align: center;
+            font-weight: 600;
+            background-color: #3c2a63;
+            color: var(--color-secondary);
+        }
+        .error-message {
+            background-color: #3a1a1a;
+            color: var(--color-error);
+            border: 1px solid var(--color-error);
+        }
+        
+        /* History Table Styles */
+        .transaction-history h2 {
+            color: var(--color-primary);
+            margin-top: 0;
+            border-bottom: 1px solid #4a4a70;
+            padding-bottom: 10px;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .transaction-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #2b1d4c;
+            border-radius: 8px;
+            overflow: hidden;
+            text-align: left;
+            margin-top: 15px;
+        }
+        .transaction-table th, .transaction-table td {
+            padding: 12px;
+            border-bottom: 1px solid #3c2a63;
+        }
+        .transaction-table th {
+            background-color: #3c2a63;
+            color: var(--color-secondary);
+        }
+        .transaction-table td:last-child {
+            text-align: center; /* Center the new button column */
+        }
+        .status-Pending { color: var(--color-secondary); }
+        .status-Making { color: #00bfff; }
+        .status-ReadyForPickup { color: #00e676; }
+        .status-Delivered { color: #00e676; }
+        .status-Cancelled { color: var(--color-error); }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="index.html" class="logo-title">
+            <i data-lucide="moon" style="width: 24px; height: 24px;"></i>
+            LUNAR VEIL CAFE ☕
+        </a>
+        <nav>
+            <a href="index.html" class="nav-button secondary"><i data-lucide="home"></i> Home</a> 
+            <a href="menu.html" class="nav-button secondary"><i data-lucide="coffee"></i> Menu</a>
+            <a href="transactions.html" class="nav-button secondary"><i data-lucide="wallet"></i> Wallet</a>
+            <a href="tracking.html" class="nav-button"><i data-lucide="car"></i> Tracking</a>
+            <a id="admin-link" href="admin.html" class="nav-button secondary" style="display:none;"><i data-lucide="lock"></i> Admin Panel</a>
+            <a href="cart.html" class="nav-button secondary"><i data-lucide="shopping-cart"></i> Cart <span id="cart-count"></span></a>
+        </nav>
+        
+        <div class="header-actions">
+            <button id="logout-btn" class="nav-button secondary">
+                <i data-lucide="log-out" style="width: 18px; height: 18px;"></i> Logout
+            </button>
+        </div>
+    </header>
+
+    <main class="container">
+        <h1 class="main-title">ORDER TRACKING</h1>
+
+        <section class="card current-order-tracking">
+            <h2><i data-lucide="car" style="vertical-align: middle;"></i> Latest Order Status</h2>
+            
+            <div class="order-summary-container">
+                <div class="order-details">
+                    <span id="order-id">#Loading...</span>
+                    <span id="order-total">Total: ₱0.00</span>
+                </div>
+                <button id="cancel-order-btn" class="nav-button secondary cancel-button" style="display:none;">
+                    <i data-lucide="x" style="width: 18px; height: 18px;"></i> Cancel Order
+                </button>
+            </div>
+            
+            <div id="status-bar">
+                <div id="active-line"></div>
+                <div class="status-message">Loading latest order status...</div>
+            </div>
+        </section>
+        
+        <section class="card transaction-history">
+            <h2><i data-lucide="history" style="vertical-align: middle;"></i> Order History</h2>
+            <div class="table-container">
+                <table class="transaction-table">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Date</th>
+                            <th>Items Summary</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                            <th>Action</th> </tr>
+                    </thead>
+                    <tbody id="order-history-body">
+                        <tr><td colspan="6" style="text-align: center;">Loading history...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const authUrl = 'auth.php';
+        const trackingUrl = 'order_tracking.php'; 
+
+        // Status bar elements
+        const statusBar = document.getElementById('status-bar');
+        const orderIdElement = document.getElementById('order-id');
+        const orderTotalElement = document.getElementById('order-total');
+        const cancelBtn = document.getElementById('cancel-order-btn'); 
+        
+        // History table element
+        const historyBody = document.getElementById('order-history-body');
+        let currentOrderId = null; // Store the ID of the latest order
+
+        // --- HANDLER FOR CANCELLATION ---
+        async function handleCancelOrder() {
+            if (!currentOrderId) {
+                alert('No active order to cancel.');
+                return;
+            }
+
+            if (!confirm(`Are you sure you want to cancel order #${currentOrderId}? This action cannot be undone.`)) {
+                return;
+            }
+
+            // Temporarily disable button
+            cancelBtn.textContent = 'Cancelling...';
+            cancelBtn.disabled = true;
+
+            try {
+                const response = await fetch(trackingUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'cancel_order', order_id: currentOrderId }) 
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    alert('Order cancelled successfully! Tracking updated.');
+                    // Reload data to update tracking bar and history
+                    loadTrackingData(currentOrderId); // Reload the current order being tracked
+                } else {
+                    alert(`Cancellation Failed: ${data.message}`);
+                }
+            } catch (error) {
+                console.error('Cancellation error:', error);
+                alert('A connection error occurred during cancellation.');
+            } finally {
+                cancelBtn.textContent = 'Cancel Order';
+                cancelBtn.disabled = false;
+            }
+        }
+        
+        // --- AUTHENTICATION & INITIAL LOAD ---
+        async function checkLoginStatus() {
+            try {
+                const response = await fetch(authUrl, {
+                    method: 'POST',
+                    body: JSON.stringify({ action: 'status' }),
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                const data = await response.json();
+
+                if (!data.isLoggedIn) {
+                    window.location.href = 'login.html';
+                    return;
+                }
+
+                const adminLink = document.getElementById('admin-link');
+                if (adminLink && data.role && data.role !== 'Standard Customer' && data.role !== 'VIP Customer') {
+                    adminLink.style.display = 'inline-flex';
+                    adminLink.innerHTML = `<i data-lucide="lock"></i> ${data.role} Panel`;
+                }
+                
+                loadTrackingData(); // Load the latest order by default
+
+            } catch (error) { 
+                console.error('Error checking login status:', error); 
+                statusBar.innerHTML = '<div class="status-message error-message">Connection Error. Please check server status.</div>';
+            }
+        }
+        
+        // --- DATA LOADING (MODIFIED to accept specific Order ID) ---
+        async function loadTrackingData(orderIdToTrack = null) {
+            // Reset active line before clearing status bar
+            const activeLine = document.getElementById('active-line');
+            if (activeLine) activeLine.style.width = '0%'; 
+            
+            // Clear status bar and re-inject active line element
+            statusBar.innerHTML = '<div id="active-line"></div><div class="status-message">Loading order status...</div>';
+            
+            // If tracking a specific order, don't clear history until we know it succeeded
+            if (!orderIdToTrack) {
+                historyBody.innerHTML = '<tr><td colspan="6" style="text-align: center;">Loading order history...</td></tr>';
+            }
+            
+            cancelBtn.style.display = 'none'; // Hide button on load
+            currentOrderId = null;
+
+            try {
+                const response = await fetch(trackingUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    // Assuming the PHP action is named 'get_tracking_data' (which should return summary AND history)
+                    body: JSON.stringify({ action: 'get_tracking_data', target_order_id: orderIdToTrack }) 
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Server status: ${response.status} ${response.statusText}`);
+                }
+
+                const data = await response.json();
+
+                if (data.success) {
+                    // Update the main tracking card with the targeted/latest order summary
+                    if (data.summary) {
+                        renderLatestOrderStatus(data.summary);
+                    } else {
+                        statusBar.innerHTML = '<div id="active-line"></div><div class="status-message">No recent orders found. Place an order to start tracking!</div>';
+                        orderIdElement.textContent = '#N/A';
+                        orderTotalElement.textContent = 'Total: ₱0.00';
+                    }
+                    
+                    // Always render history if data.history is available
+                    if (data.history) {
+                        renderOrderHistory(data.history);
+                    }
+
+                } else {
+                    const errMsg = data.message || 'Unknown error occurred on server.';
+                    statusBar.innerHTML = `<div id="active-line"></div><div class="status-message error-message">Error: ${errMsg}</div>`;
+                    historyBody.innerHTML = `<tr><td colspan="6" style="text-align: center;" class="error-message">Error loading history: ${errMsg}</td></tr>`;
+                }
+
+            } catch (error) {
+                console.error('Tracking fetch error:', error);
+                const errMsg = `Connection error: ${error.message}`;
+                statusBar.innerHTML = `<div id="active-line"></div><div class="status-message error-message">${errMsg}</div>`;
+                historyBody.innerHTML = `<tr><td colspan="6" style="text-align: center;" class="error-message">${errMsg}</td></tr>`;
+            }
+        }
+
+        // --- RENDERING FUNCTIONS ---
+        function renderLatestOrderStatus(summary) {
+            currentOrderId = summary.id; // Store ID for cancellation
+            orderIdElement.textContent = `#${summary.id}`;
+            orderTotalElement.textContent = `Total: ₱${summary.total}`;
+            // Clear but keep the active line container
+            statusBar.innerHTML = '<div id="active-line" style="width: 0%;"></div>'; 
+
+            if (summary.status === 'Cancelled') {
+                 statusBar.innerHTML = `<div class="status-message error-message">Order #${summary.id} was CANCELLED.</div>`;
+                 cancelBtn.style.display = 'none';
+                 return;
+            }
+
+            // Map order status keys to their display label and Lucide icon
+            const statusMap = {
+                'Pending': { label: 'Order Placed', icon: 'clock' },
+                'Making': { label: 'Making', icon: 'coffee' }, 
+                'ReadyForPickup': { label: 'Ready for Pickup', icon: 'package' },
+                'Delivered': { label: 'Complete', icon: 'check-circle' } 
+            };
+
+            // List of all steps
+            const steps = ['Pending', 'Making', 'ReadyForPickup', 'Delivered'];
+            const currentStatus = summary.status;
+            
+            steps.forEach(step => {
+                const statusData = statusMap[step];
+                const stepElement = document.createElement('div');
+                stepElement.className = 'status-step';
+                stepElement.setAttribute('data-status', step);
+                
+                stepElement.innerHTML = `
+                    <div class="icon-circle">
+                        <i data-lucide="${statusData.icon}" style="width: 18px; height: 18px; color: var(--color-dark);"></i>
+                    </div>
+                    <div class="status-label">${statusData.label}</div>
+                `;
+                
+                const statusIndex = steps.indexOf(currentStatus);
+                const stepIndex = steps.indexOf(step);
+
+                if (stepIndex <= statusIndex) {
+                    stepElement.classList.add('active');
+                }
+                
+                // Add 'current' class for animation on the active step (unless it's delivered/complete)
+                if (stepIndex === statusIndex && summary.status !== 'Delivered' && summary.status !== 'Cancelled') {
+                    stepElement.classList.add('current');
+                }
+
+                statusBar.appendChild(stepElement);
+            });
+            
+            // --- CANCEL BUTTON LOGIC ---
+            if (currentStatus === 'Pending' || currentStatus === 'Making') {
+                cancelBtn.style.display = 'inline-flex';
+            } else {
+                cancelBtn.style.display = 'none';
+            }
+
+            // --- PROGRESS BAR LOGIC ---
+            const statusIndex = steps.indexOf(currentStatus);
+            let progressWidth = 0;
+            
+            if (statusIndex >= 0) {
+                // Total width to cover is 75% between the first and last step icons' centers
+                const totalSegments = steps.length - 1; 
+                const segmentWidth = 75 / totalSegments; 
+                progressWidth = statusIndex * segmentWidth; 
+            }
+            
+            document.getElementById('active-line').style.width = `${progressWidth}%`; 
+            lucide.createIcons();
+        }
+        
+        function renderOrderHistory(history) {
+            if (history.length === 0) {
+                historyBody.innerHTML = '<tr><td colspan="6" style="text-align: center;">You have no recorded past orders.</td></tr>';
+                return;
+            }
+
+            historyBody.innerHTML = history.map(order => {
+                const statusClass = `status-${order.status.replace(/\s/g, '')}`; 
+                
+                // Track button for each order
+                const trackButtonHtml = `<button class="nav-button secondary track-order-btn" data-id="${order.id}"><i data-lucide="eye" style="width: 18px;"></i> Track</button>`;
+
+                return `
+                    <tr>
+                        <td>#${order.id}</td>
+                        <td>${order.order_date}</td>
+                        <td>${order.items_summary}</td>
+                        <td>₱${order.total_amount}</td>
+                        <td class="${statusClass}">${order.status}</td>
+                        <td>${trackButtonHtml}</td> </tr>
+                `;
+            }).join('');
+            
+            // Attach event listeners to all new "Track" buttons
+            document.querySelectorAll('.track-order-btn').forEach(button => {
+                button.addEventListener('click', (event) => {
+                    const orderId = event.currentTarget.getAttribute('data-id');
+                    // Reload the tracking data specifically for this order ID
+                    loadTrackingData(orderId);
+                });
+            });
+
+            // Re-run lucide to render the newly injected icons in the table
+            lucide.createIcons();
+        }
+
+        // --- EVENT LISTENERS ---
+        document.getElementById('logout-btn').addEventListener('click', async () => {
+            await fetch(authUrl, { method: 'POST', body: JSON.stringify({ action: 'logout' }), headers: { 'Content-Type': 'application/json' } });
+            window.location.href = 'login.html';
+        });
+        
+        cancelBtn.addEventListener('click', handleCancelOrder);
+
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            checkLoginStatus();
+        });
+    </script>
+</body>
+</html>

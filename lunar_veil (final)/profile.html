@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Lunar Veil Cafe ☕ — User Profile</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    /* Inherit base styles from index.html for consistency */
+:root {
+    --color-dark: #F4F0FF;          /* Base Background: Bright Pale Lavender/Mist */
+    --color-primary: #B264E6;       /* Main Accent: Radiant Amethyst Violet */
+    --color-secondary: #FFDB69;     /* Highlight/Stars: Vivid Glowing Gold (Yellow/Gold) */
+    --color-soft-gold-bg: #FFF8E1;  /* Very Pale, Soft Gold Background */
+    --color-accent: #5F17A9;        /* Secondary Accent: Deep Celestial Violet */
+    --color-light: #FFDB69;         /* Text Color: Vivid Glowing Gold (All Text) */
+    --color-error: #FF6347;         /* Error Color */
+    --color-celestial-blue: #87CEEB; /* Light Celestial Blue */
+    --color-soft-white: #FAF9F6;    /* Soft/Darker White for Container BG */
+    --font-heading: 'Cinzel', serif;
+    --font-body: 'Inter', sans-serif;
+}
+    *{box-sizing:border-box}
+    body{
+      margin:0;min-height:100vh;font-family:var(--font-body);background-color:var(--color-dark);color:var(--color-light);
+      background-image: radial-gradient(var(--color-accent) 1px, transparent 0), radial-gradient(var(--color-accent) 1px, transparent 0);
+      background-size:80px 80px;background-position:0 0,40px 40px;
+    }
+    .header{
+        background-color: var(--color-accent);
+        padding: 15px 30px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    }
+    .nav a {
+        color: var(--color-light);
+        margin-left: 20px;
+        font-weight: 600;
+        transition: color 0.3s;
+    }
+    .nav a:hover {
+        color: var(--color-secondary);
+        text-decoration: none;
+    }
+    .logo{
+        font-family: var(--font-heading);
+        font-size: 1.5rem;
+        color: var(--color-primary);
+        display: flex;
+        align-items: center;
+    }
+    .container {
+        max-width: 700px;
+        margin: 40px auto;
+        padding: 40px;
+        background-color: #1a1a36; /* Darker accent */
+        border-radius: 12px;
+        box-shadow: 0 0 25px rgba(0, 0, 0, 0.7);
+    }
+    h1 {
+        font-family: var(--font-heading);
+        color: var(--color-secondary);
+        text-align: center;
+        margin-bottom: 30px;
+        border-bottom: 2px solid var(--color-primary);
+        padding-bottom: 15px;
+    }
+    .profile-grid {
+        display: grid;
+        grid-template-columns: 150px 1fr;
+        gap: 20px;
+        padding: 20px 0;
+    }
+    .profile-label {
+        font-weight: 600;
+        color: var(--color-primary);
+        border-right: 2px solid var(--color-accent);
+        padding-right: 10px;
+    }
+    .profile-value {
+        color: var(--color-light);
+    }
+    .alert-message {
+        text-align: center;
+        color: var(--color-error);
+        font-size: 1.1rem;
+        padding: 20px;
+    }
+    .btn {
+        padding: 8px 15px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: background-color 0.3s;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .btn.primary {
+        background-color: var(--color-primary);
+        color: var(--color-light);
+    }
+    .btn.primary:hover {
+        background-color: #9b47e5;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <a href="index.html" class="logo">
+        <i data-lucide="moon" style="width: 24px; height: 24px;"></i>
+        LUNAR VEIL CAFE ☕
+    </a>
+    <nav class="nav">
+        <a href="index.html">Home</a>
+        <a href="menu.html">Menu</a>
+        <a href="transactions.html">Wallet</a>
+        <a href="tracking.html">Tracking</a>
+        <a href="profile.html">Profile</a> </nav>
+    <div style="color: var(--color-light); font-weight: 600;">
+        <span id="welcome-user">Loading...</span> | 
+        <button id="logout-btn" class="btn primary" style="padding: 5px 10px;">
+            <i data-lucide="log-out" style="width: 18px; height: 18px;"></i> Logout
+        </button>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+        <h1>Your Profile</h1> <div id="profile-data">
+            <p class="alert-message">Loading profile data...</p>
+        </div>
+    </div>
+  </main>
+
+<script>
+    const authUrl = 'auth.php';
+    
+    // Check if user is logged in, redirect if not
+    async function checkLoginStatus() {
+        const response = await fetch(authUrl, {
+            method: 'POST', body: JSON.stringify({ action: 'status' }),
+            headers: { 'Content-Type': 'application/json' }
+        });
+        const data = await response.json();
+        
+        if (!data.isLoggedIn) {
+            window.location.href = 'login.html';
+        } else {
+            document.getElementById('welcome-user').textContent = `Welcome, ${data.username}!`;
+            lucide.createIcons();
+            loadProfileData();
+        }
+    }
+
+    // New function to fetch and display profile data
+    async function loadProfileData() {
+        const profileContainer = document.getElementById('profile-data');
+        profileContainer.innerHTML = '<p class="alert-message">Fetching profile...</p>';
+        
+        try {
+            const response = await fetch(authUrl, {
+                method: 'POST', 
+                body: JSON.stringify({ action: 'profile' }),
+                headers: { 'Content-Type': 'application/json' }
+            });
+            const data = await response.json();
+
+            if (data.success && data.profile) {
+                const profile = data.profile;
+
+                // Function to map the role number to a descriptive string
+                function getRoleName(roleId) {
+                    // Convert the role to an integer, as profile.role might be a string ("0")
+                    const roleInt = parseInt(roleId); 
+                    switch (roleInt) {
+                        case 0:
+                            return 'Standard Customer'; // Base Role
+                        case 1:
+                            return 'Staff';
+                        case 2:
+                            return 'Manager';
+                        case 3:
+                            return 'VIP Customer'; // New Role Mapping (ID used by auth.php)
+                        case 4:
+                            return 'Cafe Manager'; // New Role Mapping (ID used by auth.php)
+                        case 5:
+                            return 'Admin'; // New Role Mapping (ID used by auth.php)
+                        default:
+                            // Show the bad ID for debugging
+                            return 'Unknown Role (ID: ' + roleId + ')'; 
+                    }
+                }
+                const roleName = getRoleName(profile.role);
+                // End Role Name Mapping
+
+                // Format the data into the grid (These fields must be returned by auth.php)
+                profileContainer.innerHTML = `
+                    <div class="profile-grid">
+                        <div class="profile-label">Name (Username)</div>
+                        <div class="profile-value">${profile.name}</div>
+
+                        <div class="profile-label">Role</div>
+                        <div class="profile-value">${roleName}</div>
+                        
+                        <div class="profile-label">Email</div>
+                        <div class="profile-value">${profile.email}</div>
+
+                        <div class="profile-label">Age</div>
+                        <div class="profile-value">${profile.age}</div>
+
+                        <div class="profile-label">Birthdate</div>
+                        <div class="profile-value">${profile.birthdate}</div>
+
+                        <div class="profile-label">City Address</div>
+                        <div class="profile-value">${profile.city_address}</div>
+                        
+                        <div class="profile-label">Member Since</div>
+                        <div class="profile-value">${new Date(profile.created_at).toLocaleDateString()}</div>
+                    </div>
+                `;
+            } else {
+                profileContainer.innerHTML = `<p class="alert-message">Error: ${data.message || 'Could not load profile.'}</p>`;
+            }
+        } catch (error) {
+            console.error("Error fetching profile:", error);
+            profileContainer.innerHTML = '<p class="alert-message">Connection error while fetching profile data. Check your server console (auth.php) for errors.</p>';
+        }
+    }
+
+    // Logout handler
+    document.getElementById('logout-btn').addEventListener('click', async () => {
+        await fetch(authUrl, { method: 'POST', body: JSON.stringify({ action: 'logout' }), headers: { 'Content-Type': 'application/json' } });
+        window.location.href = 'login.html';
+    });
+
+    // Start the process
+    document.addEventListener('DOMContentLoaded', checkLoginStatus);
+</script>
+
+</body>
+</html>

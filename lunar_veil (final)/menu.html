@@ -1,0 +1,566 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Lunar Veil Cafe ☕ — Menu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script> 
+
+    <style>
+        /* ------------------------------------- */
+        /* I. Global & Header Styles (Consistent) */
+        /* ------------------------------------- */
+        :root {
+    --color-dark: #F4F0FF;          /* Base Background: Bright Pale Lavender/Mist */
+    --color-primary: #B264E6;       /* Main Accent: Radiant Amethyst Violet */
+    --color-secondary: #FFDB69;     /* Highlight/Stars: Vivid Glowing Gold (Yellow/Gold) */
+    --color-soft-gold-bg: #FFF8E1;  /* Very Pale, Soft Gold Background */
+    --color-accent: #5F17A9;        /* Secondary Accent: Deep Celestial Violet */
+    --color-light: #FFDB69;         /* Text Color: Vivid Glowing Gold (All Text) */
+    --color-error: #FF6347;         /* Error Color */
+    --color-celestial-blue: #87CEEB; /* Light Celestial Blue */
+    --color-soft-white: #FAF9F6;    /* Soft/Darker White for Container BG */
+    --font-heading: 'Cinzel', serif;
+    --font-body: 'Inter', sans-serif;
+}
+        *{box-sizing:border-box}
+        body{
+            margin:0;min-height:100vh;font-family:var(--font-body);background-color:var(--color-dark);color:var(--color-light);
+            background-image: radial-gradient(var(--color-accent) 1px, transparent 0), radial-gradient(var(--color-accent) 1px, transparent 0);
+            background-size:80px 80px;background-position:0 0,40px 40px;
+            padding-bottom: 50px;
+        }
+        a{color:var(--color-secondary);text-decoration:none}
+        a:hover{text-decoration:underline}
+        
+        /* Header Styles */
+        header {
+            background-color: var(--color-accent);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        .logo-title {
+            font-family: var(--font-heading);
+            font-size: 1.8rem;
+            color: var(--color-secondary);
+            text-shadow: 0 0 8px var(--color-primary);
+            line-height: 1;
+        }
+        .nav-button {
+            background-color: var(--color-primary);
+            color: var(--color-dark);
+            border: none;
+            padding: 0.75rem 1.25rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.3s, transform 0.2s, box-shadow 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+        .nav-button.secondary {
+            background-color: transparent;
+            color: var(--color-primary);
+            border: 2px solid var(--color-primary);
+            padding: 0.65rem 1.15rem;
+        }
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .balance-badge {
+            background-color: var(--color-accent);
+            padding: 8px 12px;
+            border-radius: 5px;
+            border: 1px solid var(--color-primary);
+            font-weight: 600;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            line-height: 1; 
+        }
+
+        /* ------------------------------------- */
+        /* II. Menu Specific Styles */
+        /* ------------------------------------- */
+        .container {
+            max-width: 1000px;
+            margin: 50px auto;
+            padding: 0 15px;
+        }
+        .main-title {
+            color: var(--color-secondary);
+            font-family: var(--font-heading);
+            margin-bottom: 40px;
+            text-align: center;
+            font-size: 2.5rem;
+        }
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        .menu-item {
+            background-color: var(--color-accent);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid var(--color-primary);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .menu-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.7);
+        }
+        .item-name {
+            font-family: var(--font-heading);
+            color: var(--color-secondary);
+            font-size: 1.5rem;
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+        .item-description {
+            color: #C0C0C0;
+            margin-bottom: 15px;
+            flex-grow: 1;
+        }
+        .item-price {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--color-success);
+            margin-bottom: 15px;
+        }
+        .add-to-cart-btn {
+            background-color: var(--color-success);
+            color: var(--color-dark);
+            border: none;
+            padding: 12px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: background-color 0.3s;
+        }
+        .add-to-cart-btn:hover {
+            background-color: #00b35e;
+        }
+        .category-title {
+            font-family: var(--font-heading);
+            color: var(--color-primary);
+            font-size: 2rem;
+            border-bottom: 2px solid var(--color-secondary);
+            padding-bottom: 10px;
+            margin-top: 50px;
+            margin-bottom: 30px;
+            display: flex; /* Added for icon alignment */
+            align-items: center; /* Added for icon alignment */
+            gap: 10px; /* Space between icon and text */
+        }
+
+        /* ------------------------------------- */
+        /* III. Slideshow Styles (Updated for Fit) */
+        /* ------------------------------------- */
+        .slideshow-container {
+            max-width: 1000px; /* Constrain to container width */
+            margin: 0 auto 50px auto; /* Centered */
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            height: 300px; /* Fixed height for consistency */
+        }
+        .slide {
+            display: none;
+            height: 300px;
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 30px;
+            animation: fadein 1s;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            transition: opacity 1s ease-in-out;
+        }
+        .slide-content {
+            background-color: rgba(0, 0, 0, 0.4);
+            padding: 15px;
+            border-radius: 8px;
+            max-width: 50%;
+        }
+        .slide h2 {
+            font-family: var(--font-heading);
+            font-size: 2.5rem;
+            color: var(--color-secondary);
+            margin-top: 0;
+            margin-bottom: 10px;
+            text-shadow: 0 0 5px var(--color-primary);
+        }
+        .slide p {
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+        .featured-item {
+            font-weight: 700;
+            color: var(--color-success);
+        }
+        /* Sample gradient backgrounds for variety */
+        .slide[data-category="lunar-brews"] { 
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e); 
+        }
+        .slide[data-category="signature-drinks"] { 
+            background: linear-gradient(135deg, #23074d, #cc5333); 
+        }
+        .slide[data-category="celestial-treats"] { 
+            background: linear-gradient(135deg, #4b0082, #e75a7c); 
+        }
+        .slide[data-category="starship-savories"] { 
+            background: linear-gradient(135deg, #2e1d6d, #8d99ae); 
+        }
+
+        @keyframes fadein {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Responsive Adjustments for Slideshow */
+        @media (max-width: 768px) {
+            .slideshow-container {
+                height: 250px; 
+            }
+            .slide-content {
+                max-width: 90%;
+            }
+            .slide h2 {
+                font-size: 2rem;
+            }
+        }
+        @media (max-width: 480px) {
+            .slideshow-container {
+                height: 200px; 
+            }
+            .slide h2 {
+                font-size: 1.5rem;
+            }
+            .slide p {
+                font-size: 0.9rem;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo-title">Lunar Veil Cafe ☕</div>
+        <nav>
+            <a href="index.html" class="nav-button secondary"><i data-lucide="home"></i> Home</a> 
+            <a href="menu.html" class="nav-button"><i data-lucide="coffee"></i> Menu</a>
+            <a href="transactions.html" class="nav-button secondary"><i data-lucide="wallet"></i> Wallet</a>
+            <a href="tracking.html" class="nav-button secondary"><i data-lucide="car"></i> Tracking</a>
+            <a href="cart.html" class="nav-button secondary"><i data-lucide="shopping-cart"></i> Cart (<span id="cart-count">0</span>)</a>
+        </nav>
+        <div class="header-actions">
+            <div class="user-info">
+                <span id="welcome-user">Hello, Guest!</span> 
+                <div id="wallet-balance-header" class="balance-badge">
+                    <i data-lucide="wallet" style="width: 18px; height: 18px;"></i> Balance: ₱0.00
+                </div>
+            </div>
+            <button id="logout-btn" class="nav-button secondary">
+                <i data-lucide="log-out" style="width: 18px; height: 18px;"></i> Logout
+            </button>
+        </div>
+    </header>
+
+    <main class="container">
+        <h1 class="main-title">OUR CELESTIAL OFFERINGS</h1>
+
+        <div class="slideshow-container" id="menu-slideshow">
+            </div>
+
+        <h2 class="category-title"><i data-lucide="coffee"></i> 🌌 Lunar Brews</h2>
+        <div class="menu-grid" id="lunar-brews">
+            </div>
+
+        <h2 class="category-title"><i data-lucide="sparkles"></i> ✨ Seasonal Drinks</h2>
+        <div class="menu-grid" id="signature-drinks">
+            </div>
+
+        <h2 class="category-title"><i data-lucide="cake"></i> 🍰 Celestial Treats</h2>
+        <div class="menu-grid" id="celestial-treats">
+            </div>
+        
+        <h2 class="category-title"><i data-lucide="pizza"></i> ⭐ Starship Savories</h2>
+        <div class="menu-grid" id="starship-savories">
+            </div>
+
+    </main>
+
+<script>
+    const authUrl = 'auth.php';
+    const CART_STORAGE_KEY = 'cafeCart';
+    const CURRENCY_SYMBOL = '₱';
+    
+    let cart = []; 
+    let isLoggedIn = false;
+
+    // --- Menu Data (4 Categories, 10 Items each) ---
+    const menuItems = [
+        // 🌌 Lunar Brews (10 Items)
+        { id: '101', name: 'Astral Americano', price: 95.00, desc: 'A classic shot of espresso diluted for a smooth, invigorating start.' , category: 'lunar-brews', category_name: 'Lunar Brews' },
+        { id: '102', name: 'Nebula Latte', price: 130.00, desc: 'Espresso with steamed milk and a hint of vanilla, swirled like a cloud.' , category: 'lunar-brews' },
+        { id: '103', name: 'Black Hole Cold Brew', price: 150.00, desc: '24-hour steeped coffee, intensely dark and rich. Served over ice.' , category: 'lunar-brews' },
+        { id: '104', name: 'Eclipse Espresso', price: 80.00, desc: 'A short, intense shot of our darkest roast, perfect for a quick boost.' , category: 'lunar-brews' },
+        { id: '105', name: 'Comet Cappuccino', price: 140.00, desc: 'Equal parts espresso, steamed milk, and velvety foam.' , category: 'lunar-brews' },
+        { id: '106', name: 'Orbit Oatmeal Latte', price: 165.00, desc: 'Our signature latte made with creamy oat milk for a subtle sweetness.' , category: 'lunar-brews' },
+        { id: '107', name: 'Galactic Pour-Over', price: 180.00, desc: 'Single-origin coffee, expertly brewed for a clean, nuanced flavor.' , category: 'lunar-brews' },
+        { id: '108', name: 'Stardust Steamer', price: 110.00, desc: 'Steamed milk infused with a hint of celestial vanilla syrup.' , category: 'lunar-brews' },
+        { id: '109', name: 'Meteor Macchiato (Hot)', price: 135.00, desc: 'Espresso marked with a dollop of foam and a swirl of caramel.' , category: 'lunar-brews' },
+        { id: '110', name: 'Zenith Zest Green Tea', price: 90.00, desc: 'Clean, refreshing Japanese Sencha, served hot or iced.' , category: 'lunar-brews' },
+
+        // ✨ Veil Signature Drinks (10 Items) -> NOW SEASONAL DRINKS
+        { id: '203', name: 'Cosmic Caramel Crunch', price: 195.00, desc: 'Iced caramel latte blended with crushed honeycomb candy.' , category: 'signature-drinks', category_name: 'Seasonal Drinks' }, // NEW FEATURED ITEM
+        { id: '202', name: 'Milky Way Macchiato', price: 160.00, desc: 'Layered caramel and espresso with a milky foam top. Sweet perfection.' , category: 'signature-drinks', category_name: 'Seasonal Drinks' },
+        { id: '201', name: 'Solar Flare Mocha', price: 175.00, desc: 'Dark mocha, chili flakes, and a dash of cinnamon. A spicy kick!' , category: 'signature-drinks', category_name: 'Seasonal Drinks' }, // Moved from 1st position
+        { id: '204', name: 'Aurora Borealis Cooler', price: 210.00, desc: 'Layered lemonade, butterfly pea tea, and mint, a vibrant visual treat.' , category: 'signature-drinks', category_name: 'Seasonal Drinks' },
+        { id: '205', name: 'Deep Space Decaf', price: 150.00, desc: 'Rich decaf espresso blended with dark chocolate and whipped cream.' , category: 'signature-drinks', category_name: 'Seasonal Drinks' },
+        { id: '206', name: 'Crater Coffee Float', price: 230.00, desc: 'Intense cold brew topped with a scoop of premium vanilla ice cream.' , category: 'signature-drinks', category_name: 'Seasonal Drinks' },
+        { id: '207', name: 'Supernova Strawberry Milk', price: 145.00, desc: 'Homemade strawberry milk with a fresh berry swirl and a hint of sparkle.' , category: 'signature-drinks', category_name: 'Seasonal Drinks' },
+        { id: '208', name: 'Quasar Quad Shot', price: 250.00, desc: 'Four shots of our strongest espresso for ultimate, sustained energy.' , category: 'signature-drinks', category_name: 'Seasonal Drinks' },
+        { id: '209', name: 'Terra Tea Bomb', price: 185.00, desc: 'Hot tea with a dissolving sphere of honey, ginger, and aromatic herbs.' , category: 'signature-drinks', category_name: 'Seasonal Drinks' },
+        { id: '210', name: 'Andromeda Affogato', price: 170.00, desc: 'Hot espresso poured over a scoop of vanilla bean gelato.' , category: 'signature-drinks', category_name: 'Seasonal Drinks' },
+        
+        // 🍰 Celestial Treats (10 Items)
+        { id: '301', name: 'Moon Rock Brownie', price: 85.00, desc: 'Fudgy brownie with white chocolate chips, resembling a lunar surface.' , category: 'celestial-treats', category_name: 'Celestial Treats' },
+        { id: '302', name: 'Jupiter Cheesecake', price: 190.00, desc: 'Creamy cheesecake swirled with passionfruit glaze, mimicking Jupiter\'s bands.' , category: 'celestial-treats' },
+        { id: '303', name: 'Venus Vanilla Cake', price: 120.00, desc: 'Light sponge cake with a delicate vanilla bean frosting.' , category: 'celestial-treats' },
+        { id: '304', name: 'Mars Red Velvet Cookie', price: 75.00, desc: 'Chewy red velvet cookie with a light cream cheese drizzle.' , category: 'celestial-treats' },
+        { id: '305', name: 'Saturn Ring Donut', price: 90.00, desc: 'A giant classic glazed donut, a perfect golden ring.' , category: 'celestial-treats' },
+        { id: '306', name: 'Pluto Pie Slice (Apple)', price: 140.00, desc: 'Warm slice of classic apple pie with a cinnamon crumble top.' , category: 'celestial-treats' },
+        { id: '307', name: 'Mercury Mango Muffin', price: 80.00, desc: 'Tropical mango muffin, baked fresh daily with a sweet crumble.' , category: 'celestial-treats' },
+        { id: '308', name: 'Uranus Ube Crinkles', price: 65.00, desc: 'Soft, powdery purple yam (ube) cookies, a local favorite.' , category: 'celestial-treats' },
+        { id: '309', name: 'Neptune Nut Bar', price: 115.00, desc: 'Layered energy bar with assorted nuts, caramel, and dark chocolate.' , category: 'celestial-treats' },
+        { id: '310', name: 'Halley\'s Comet Parfait', price: 155.00, desc: 'Yogurt, granola, and fresh berries layered in a glass.' , category: 'celestial-treats' },
+        
+        // ⭐ Starship Savories (10 Items)
+        { id: '401', name: 'Meteorite Sandwich', price: 180.00, desc: 'Toasted whole wheat bread with ham, cheese, and dark greens.' , category: 'starship-savories', category_name: 'Starship Savories' },
+        { id: '402', name: 'Galaxy Grilled Cheese', price: 150.00, desc: 'Melted sharp cheddar and mozzarella on sourdough, grilled to perfection.' , category: 'starship-savories' },
+        { id: '403', name: 'Asteroid Hummus Plate', price: 220.00, desc: 'Creamy homemade hummus served with fresh vegetable sticks and pita.' , category: 'starship-savories' },
+        { id: '404', name: 'Lunar Croissant', price: 110.00, desc: 'A flaky, buttery plain croissant, perfect for dipping in coffee.' , category: 'starship-savories' },
+        { id: '405', name: 'Saturn Ring Onion Soup', price: 190.00, desc: 'Rich caramelized onion soup topped with a crouton and melted cheese.' , category: 'starship-savories' },
+        { id: '406', name: 'Cosmic Chicken Wrap', price: 240.00, desc: 'Grilled chicken, lettuce, tomato, and light dressing wrapped in a tortilla.' , category: 'starship-savories' },
+        { id: '407', name: 'Nebula Noodle Salad', price: 210.00, desc: 'Cold glass noodles tossed with fresh cilantro, peanut dressing, and carrots.' , category: 'starship-savories' },
+        { id: '408', name: 'Solar System Pizza Slice', price: 130.00, desc: 'A thick slice of pepperoni and mushroom pizza.' , category: 'starship-savories' },
+        { id: '409', name: 'Comet Quiche', price: 170.00, desc: 'Savory egg tart filled with spinach and feta cheese.' , category: 'starship-savories' },
+        { id: '410', name: 'Deep Space Chili Bowl', price: 260.00, desc: 'Hearty chili con carne served with a dollop of sour cream.' , category: 'starship-savories' },
+    ];
+
+    function formatCurrency(amount) {
+        return CURRENCY_SYMBOL + parseFloat(amount).toFixed(2);
+    }
+
+    function getCartFromStorage() {
+        try {
+            const storedCart = localStorage.getItem(CART_STORAGE_KEY);
+            const parsedCart = storedCart ? JSON.parse(storedCart) : [];
+            return Array.isArray(parsedCart) ? parsedCart : [];
+        } catch (e) {
+            console.error("Corrupted cart data found. Returning empty array.", e);
+            return [];
+        }
+    }
+
+    function saveCart() {
+        localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart)); 
+        renderCartCount();
+    }
+
+    function renderCartCount() {
+        const itemsInStorage = getCartFromStorage();
+        const totalItems = itemsInStorage.reduce((total, item) => total + item.quantity, 0);
+        document.getElementById('cart-count').textContent = totalItems;
+    }
+    
+    function addToCart(id, name, price) {
+        cart = getCartFromStorage();
+        const itemIndex = cart.findIndex(item => item.id === id);
+        
+        if (itemIndex > -1) {
+            cart[itemIndex].quantity += 1;
+        } else {
+            cart.push({ id, name, price, quantity: 1 });
+        }
+
+        saveCart(); 
+        alert(`${name} added to cart!`);
+    }
+
+    // ----------------------------------------------------
+    // Slideshow Logic
+    // ----------------------------------------------------
+    let slideIndex = 0;
+
+    function renderSlideshow() {
+        const slideshowContainer = document.getElementById('menu-slideshow');
+        
+        const categories = {};
+        menuItems.forEach(item => {
+            if (!categories[item.category]) {
+                // Use the first item of each category as the featured slide
+                categories[item.category] = {
+                    name: item.category_name,
+                    featuredItem: item
+                };
+            }
+        });
+
+        let html = '';
+        const categoryKeys = Object.keys(categories);
+        
+        categoryKeys.forEach((key, index) => {
+            const cat = categories[key];
+            const item = cat.featuredItem;
+            
+            html += `
+                <div class="slide" data-category="${key}">
+                    <div class="slide-content">
+                        <h2>${cat.name}</h2>
+                        <p>Explore our signature collection!</p>
+                        <p>Featured Item: <span class="featured-item">${item.name}</span></p>
+                        <p>Price: ${formatCurrency(item.price)}</p>
+                        <a href="#${key}" class="nav-button" style="margin-top: 15px; background-color: var(--color-secondary); color: var(--color-dark); padding: 8px 15px;">
+                            View All ${cat.name}
+                        </a>
+                    </div>
+                </div>
+            `;
+        });
+        
+        slideshowContainer.innerHTML = html;
+        showSlides(); 
+    }
+
+    function showSlides() {
+        const slides = document.getElementsByClassName("slide");
+        if (slides.length === 0) return;
+
+        // Hide all slides
+        for (let i = 0; i < slides.length; i++) {
+            slides[i].style.display = "none";  
+        }
+        
+        // Increment index and loop back if necessary
+        slideIndex++;
+        if (slideIndex > slides.length) {slideIndex = 1}    
+        
+        // Show the current slide
+        slides[slideIndex-1].style.display = "block";  
+        
+        // Change image every 4 seconds (4000 milliseconds)
+        setTimeout(showSlides, 4000); 
+    }
+    // ----------------------------------------------------
+
+    function renderMenuItems() {
+        menuItems.forEach(item => {
+            const container = document.getElementById(item.category);
+            if (container) {
+                const itemHtml = `
+                    <div class="menu-item">
+                        <div>
+                            <h3 class="item-name">${item.name}</h3>
+                            <p class="item-description">${item.desc}</p>
+                        </div>
+                        <div class="item-price">${formatCurrency(item.price)}</div>
+                        <button class="add-to-cart-btn" onclick="addToCart('${item.id}', '${item.name}', ${item.price})">
+                            <i data-lucide="plus-circle" style="width: 20px; height: 20px;"></i> Add to Cart
+                        </button>
+                    </div>
+                `;
+                container.innerHTML += itemHtml;
+            }
+        });
+        lucide.createIcons();
+    }
+    
+    // Function to handle fetching and displaying wallet balance (Consistent)
+    async function loadWalletBalance() {
+        if (!isLoggedIn) return;
+        try {
+            const response = await fetch('wallet.php', {
+                method: 'POST', body: JSON.stringify({ action: 'get_balance' }),
+                headers: { 'Content-Type': 'application/json' }
+            });
+            const data = await response.json();
+            if (data.success) {
+                const balance = parseFloat(data.balance).toFixed(2);
+                document.getElementById('wallet-balance-header').innerHTML = `<i data-lucide="wallet" style="width: 18px; height: 18px;"></i> Balance: ${CURRENCY_SYMBOL}${balance}`;
+            }
+        } catch (error) { console.error('Error fetching balance:', error); }
+    }
+    
+    // Function to check login status (Consistent)
+    async function updateHeaderStatus() {
+        const statusDiv = document.getElementById('welcome-user');
+        try {
+            const response = await fetch(authUrl, { 
+                method: 'POST', 
+                body: JSON.stringify({ action: 'status' }), 
+                headers: { 'Content-Type': 'application/json' } 
+            });
+            const data = await response.json();
+
+            if (data.isLoggedIn) {
+                isLoggedIn = true;
+                statusDiv.textContent = `Welcome, ${data.username}!`; 
+                loadWalletBalance();
+            } else {
+                isLoggedIn = false;
+                statusDiv.innerHTML = 'Hello, <a href="login.html" style="color: var(--color-secondary); font-weight: 600;">Login / Register</a>';
+            }
+        } catch (error) {
+            console.error("Error fetching status:", error);
+            statusDiv.innerHTML = 'Status Check Failed';
+        }
+        lucide.createIcons();
+    }
+    
+    document.getElementById('logout-btn').addEventListener('click', async () => {
+        await fetch(authUrl, { method: 'POST', body: JSON.stringify({ action: 'logout' }), headers: { 'Content-Type': 'application/json' } });
+        window.location.href = 'login.html';
+    });
+
+    // --- Initialization ---
+    document.addEventListener('DOMContentLoaded', () => {
+        renderMenuItems();
+        renderSlideshow(); 
+        updateHeaderStatus();
+        renderCartCount(); 
+    });
+</script>
+
+</body>
+</html>

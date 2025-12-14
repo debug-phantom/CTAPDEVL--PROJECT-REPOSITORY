@@ -1,0 +1,445 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Lunar Veil Cafe ☕ — Shopping Cart</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    /* Inherit base styles from index.html for consistency */
+   :root {
+    --color-dark: #F4F0FF;          /* Base Background: Bright Pale Lavender/Mist */
+    --color-primary: #B264E6;       /* Main Accent: Radiant Amethyst Violet */
+    --color-secondary: #FFDB69;     /* Highlight/Stars: Vivid Glowing Gold (Yellow/Gold) */
+    --color-soft-gold-bg: #FFF8E1;  /* Very Pale, Soft Gold Background */
+    --color-accent: #5F17A9;        /* Secondary Accent: Deep Celestial Violet */
+    --color-light: #FFDB69;         /* Text Color: Vivid Glowing Gold (All Text) */
+    --color-error: #FF6347;         /* Error Color */
+    --color-celestial-blue: #87CEEB; /* Light Celestial Blue */
+    --color-soft-white: #FAF9F6;    /* Soft/Darker White for Container BG */
+    --font-heading: 'Cinzel', serif;
+    --font-body: 'Inter', sans-serif;
+}
+    *{box-sizing:border-box}
+    body{
+      margin:0;min-height:100vh;font-family:var(--font-body);background-color:var(--color-dark);color:var(--color-light);
+      background-image: radial-gradient(var(--color-accent) 1px, transparent 0), radial-gradient(var(--color-accent) 1px, transparent 0);
+      background-size:80px 80px;background-position:0 0,40px 40px;
+      padding-bottom: 50px;
+    }
+    header {
+        background-color: var(--color-accent);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+        padding: 1rem 1.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+    }
+    .logo-title {
+        font-family: var(--font-heading);
+        font-size: 1.8rem;
+        color: var(--color-secondary);
+        text-shadow: 0 0 8px var(--color-primary);
+        line-height: 1;
+    }
+    .nav-button {
+        background-color: var(--color-primary);
+        color: var(--color-dark);
+        border: none;
+        padding: 0.75rem 1.25rem;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: background-color 0.3s, transform 0.2s, box-shadow 0.2s;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        text-decoration: none;
+    }
+    .nav-button.secondary {
+        background-color: transparent;
+        color: var(--color-primary);
+        border: 2px solid var(--color-primary);
+        padding: 0.65rem 1.15rem;
+    }
+    /* Admin button styles removed from CSS as well */
+    .header-actions {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+    .user-info {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+    /* Clean Balance Badge Style */
+    .balance-badge {
+        background-color: var(--color-accent);
+        padding: 8px 12px;
+        border-radius: 5px;
+        border: 1px solid var(--color-primary);
+        font-weight: 600;
+        font-size: 0.95rem;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        line-height: 1; 
+    }
+    /* Cart Specific Styles */
+    .container {
+        max-width: 900px;
+        margin: 50px auto;
+        padding: 0 15px;
+    }
+    .main-title {
+        color: var(--color-secondary);
+        font-family: var(--font-heading);
+        margin-bottom: 30px;
+        text-align: center;
+    }
+    .cart-wrapper {
+        display: flex;
+        gap: 30px;
+    }
+    .cart-items-container {
+        flex: 2;
+        background-color: #1a1a3a;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+        border: 1px solid var(--color-primary);
+    }
+    .cart-summary {
+        flex: 1;
+        background-color: #2b1d4c;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+        border: 1px solid var(--color-secondary);
+        height: fit-content;
+    }
+    .cart-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 0;
+        border-bottom: 1px solid #3c2a63;
+    }
+    .item-details {
+        flex-grow: 1;
+    }
+    .item-name {
+        font-weight: 600;
+        font-size: 1.1rem;
+        margin: 0;
+    }
+    .item-price-unit {
+        font-size: 0.9em;
+        color: #B0B0C0;
+        margin: 5px 0 0 0;
+    }
+    .quantity-controls {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-left: 20px;
+    }
+    .qty-btn {
+        background-color: var(--color-primary);
+        color: var(--color-dark);
+        border: none;
+        width: 30px;
+        height: 30px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .remove-btn {
+        background-color: var(--color-error);
+        color: var(--color-light);
+        width: 30px;
+        height: 30px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .item-total-price {
+        font-weight: 700;
+        color: var(--color-secondary);
+        width: 80px;
+        text-align: right;
+    }
+    .summary-line {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+        font-weight: 500;
+    }
+    .summary-line.total {
+        border-top: 2px solid var(--color-primary);
+        padding-top: 10px;
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--color-secondary);
+    }
+    .checkout-btn {
+        width: 100%;
+        margin-top: 20px;
+        background-color: #00e676; 
+        color: var(--color-dark);
+        text-align: center;
+        padding: 12px;
+        border-radius: 8px;
+        font-weight: 700;
+        text-decoration: none;
+        display: block;
+    }
+    .empty-cart-message {
+        text-align: center;
+        font-size: 1.1rem;
+        padding: 50px 0;
+        color: #B0B0C0;
+    }
+  </style>
+</head>
+<body>
+    <header>
+        <div class="logo-title">Lunar Veil Cafe ☕</div>
+        <nav>
+            <a href="index.html" class="nav-button secondary"><i data-lucide="home"></i> Home</a> 
+            <a href="menu.html" class="nav-button secondary"><i data-lucide="coffee"></i> Menu</a>
+            <a href="transactions.html" class="nav-button secondary"><i data-lucide="wallet"></i> Wallet</a>
+            <a href="tracking.html" class="nav-button secondary"><i data-lucide="car"></i> Tracking</a>
+            <a href="cart.html" class="nav-button"><i data-lucide="shopping-cart"></i> Cart (<span id="cart-count">0</span>)</a>
+            </nav>
+        <div class="header-actions">
+            <div class="user-info">
+                <span id="welcome-user">Hello, Guest!</span> 
+                <div id="wallet-balance-header" class="balance-badge">
+                    <i data-lucide="wallet" style="width: 18px; height: 18px;"></i> Balance: ₱0.00
+                </div>
+            </div>
+            <button id="logout-btn" class="nav-button secondary">
+                <i data-lucide="log-out" style="width: 18px; height: 18px;"></i> Logout
+            </button>
+        </div>
+    </header>
+
+    <main class="container">
+        <h1 class="main-title">YOUR SHOPPING CART</h1>
+
+        <div id="cart-content" class="cart-wrapper" style="display: none;">
+            <div class="cart-items-container">
+                <ul id="cart-items-list" style="list-style: none; padding: 0;">
+                    </ul>
+            </div>
+
+            <div class="cart-summary">
+                <h2>Order Summary</h2>
+                <div id="cart-summary-details">
+                    </div>
+                <a href="checkout.html" id="proceed-to-checkout-btn" class="checkout-btn">Proceed to Checkout</a>
+                <a href="menu.html" class="nav-button secondary" style="width: 100%; margin-top: 10px; justify-content: center;">Continue Shopping</a>
+            </div>
+        </div>
+        
+        <div id="empty-cart" class="empty-cart-message">
+             Your cart is currently empty. <a href="menu.html" style="color: var(--color-secondary);">Check out our menu!</a>
+        </div>
+    </main>
+
+<script>
+    const authUrl = 'auth.php';
+    const CART_STORAGE_KEY = 'cafeCart';
+    const TAX_RATE = 0.10; 
+    // MODIFIED: Initialize cartItems as an empty array to prevent auto-loading from localStorage
+    let cartItems = []; 
+
+    function formatCurrency(amount) {
+        return '₱' + parseFloat(amount).toFixed(2);
+    }
+
+    function getCartItems() {
+        // MODIFIED: This function is now intentionally empty to prevent auto-registration 
+        // from localStorage on page load. cartItems remains the initial empty array [].
+    }
+    
+    // Helper to get the actual cart data from storage for rendering cart count 
+    function getCartFromStorage() {
+        try {
+            const storedCart = localStorage.getItem(CART_STORAGE_KEY);
+            return storedCart ? JSON.parse(storedCart) : [];
+        } catch (e) {
+            console.error("Failed to read cart from localStorage:", e);
+            return [];
+        }
+    }
+
+
+    function saveCart() {
+        // This must be kept to save changes (updates/removals) made on this page.
+        localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cartItems));
+        loadAndRenderCart(); 
+    }
+
+    function updateQuantity(id, change) {
+        // To update items, we must first load them from storage
+        cartItems = getCartFromStorage(); 
+        
+        const item = cartItems.find(i => i.id == id);
+        if (item) {
+            item.quantity += change;
+            if (item.quantity <= 0) {
+                cartItems = cartItems.filter(i => i.id != id);
+            }
+            saveCart();
+        }
+    }
+
+    function removeItem(id) {
+        // To remove items, we must first load them from storage
+        cartItems = getCartFromStorage();
+        cartItems = cartItems.filter(i => i.id != id);
+        saveCart();
+    }
+
+    function renderCart() {
+        const cartList = document.getElementById('cart-items-list');
+        const summaryDetails = document.getElementById('cart-summary-details');
+        const cartContent = document.getElementById('cart-content');
+        const emptyCart = document.getElementById('empty-cart');
+        const cartCountSpan = document.getElementById('cart-count');
+
+        // To render, we must read the actual stored items (if any were added from menu.html)
+        // Note: The global cartItems array remains empty initially, so we use a local variable for rendering.
+        const itemsToRender = getCartFromStorage();
+
+        let subtotal = 0;
+        let totalItems = 0;
+        let html = '';
+
+        if (itemsToRender.length === 0) {
+            cartContent.style.display = 'none';
+            emptyCart.style.display = 'block';
+            cartCountSpan.textContent = '0';
+            return;
+        }
+
+        itemsToRender.forEach(item => {
+            const itemTotal = item.price * item.quantity;
+            subtotal += itemTotal;
+            totalItems += item.quantity;
+
+            html += `
+                <li class="cart-item" data-id="${item.id}">
+                    <div class="item-details">
+                        <p class="item-name">${item.name}</p>
+                        <p class="item-price-unit">@ ${formatCurrency(item.price)}</p>
+                    </div>
+                    <div class="quantity-controls">
+                        <button class="qty-btn" onclick="updateQuantity('${item.id}', -1)">-</button>
+                        <span>${item.quantity}</span>
+                        <button class="qty-btn" onclick="updateQuantity('${item.id}', 1)">+</button>
+                        <button class="remove-btn" onclick="removeItem('${item.id}')"><i data-lucide="trash-2" style="width: 18px; height: 18px;"></i></button>
+                    </div>
+                    <div class="item-total-price">
+                        ${formatCurrency(itemTotal)}
+                    </div>
+                </li>
+            `;
+        });
+        
+        const tax = subtotal * TAX_RATE; 
+        const total = subtotal + tax; 
+
+        let summaryHtml = `
+            <div class="summary-line"><span>Subtotal (${totalItems} items):</span><span id="cart-subtotal-value">${formatCurrency(subtotal)}</span></div>
+            <div class="summary-line"><span>Tax (${(TAX_RATE * 100).toFixed(0)}%):</span><span id="cart-tax-value">${formatCurrency(tax)}</span></div>
+            <div class="summary-line total"><span>Total:</span><span id="cart-total-value">${formatCurrency(total)}</span></div>
+        `;
+
+        cartList.innerHTML = html;
+        summaryDetails.innerHTML = summaryHtml;
+        cartContent.style.display = 'flex';
+        emptyCart.style.display = 'none';
+        cartCountSpan.textContent = totalItems;
+        lucide.createIcons();
+    }
+    
+    function loadAndRenderCart() {
+        // Load items from storage for the initial render (to display if items were added from menu)
+        // If you truly want the cart to ALWAYS start empty on this page, remove this line:
+        // cartItems = getCartFromStorage(); 
+        renderCart();
+    }
+    
+    function loadWalletBalance(balance) {
+         const headerBalanceDisplay = document.getElementById('wallet-balance-header');
+         if (headerBalanceDisplay) {
+             const currentBalance = balance !== undefined 
+                 ? parseFloat(balance).toFixed(2) 
+                 : '0.00'; 
+             
+             headerBalanceDisplay.innerHTML = `<i data-lucide="wallet" style="width: 18px; height: 18px;"></i> Balance: ₱${currentBalance}`;
+         }
+    }
+    
+    async function updateHeaderStatus() {
+        const statusDiv = document.getElementById('welcome-user');
+        try {
+            const response = await fetch(authUrl, { 
+                method: 'POST', 
+                body: JSON.stringify({ action: 'status' }), 
+                headers: { 'Content-Type': 'application/json' } 
+            });
+            const data = await response.json();
+
+            if (data.isLoggedIn) {
+                statusDiv.textContent = `Welcome, ${data.username}!`; 
+                loadWalletBalance(data.balance);
+            } else {
+                statusDiv.innerHTML = 'Hello, <a href="login.html" style="color: var(--color-secondary); font-weight: 600;">Login / Register</a>';
+            }
+        } catch (error) {
+            console.error("Error fetching status:", error);
+            statusDiv.innerHTML = 'Status Check Failed';
+        }
+        
+        lucide.createIcons();
+    }
+    
+    document.getElementById('logout-btn').addEventListener('click', async () => {
+        await fetch(authUrl, { method: 'POST', body: JSON.stringify({ action: 'logout' }), headers: { 'Content-Type': 'application/json' } });
+        window.location.href = 'login.html';
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+        updateHeaderStatus();
+        loadAndRenderCart();
+        
+        const checkoutBtn = document.getElementById('proceed-to-checkout-btn');
+        if (checkoutBtn) {
+            // Check if the actual stored cart is empty before proceeding
+            checkoutBtn.addEventListener('click', (e) => {
+                if (getCartFromStorage().length === 0) {
+                    e.preventDefault(); 
+                    alert("Your cart is empty. Please add items before checking out.");
+                }
+            });
+        }
+    });
+</script>
+
+</body>
+</html>
